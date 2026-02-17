@@ -1,4 +1,4 @@
-# ⚡ Script Manager
+# Script Manager
 
 A desktop application for running and managing Python scripts — with a clean GUI, live output logs, interactive input support, and dark/light themes.
 
