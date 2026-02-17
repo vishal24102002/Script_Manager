@@ -183,6 +183,10 @@ script-manager/
 
 ---
 
+# Screen Shot
+<img width="1600" height="871" alt="image" src="https://github.com/user-attachments/assets/ebfc06e1-a864-4255-bb2c-51b26eaa9bc9" />
+
+
 ## Building a Standalone Executable
 
 You can package the app into a single installer that doesn't need Node.js installed.
