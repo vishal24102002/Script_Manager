@@ -1,0 +1,32 @@
+{
+  "name": "your-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.your-app.script-runner",
+    "productName": "Script Runner",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/*.asar.unpacked",
+      "!**/*.map"
+    ],
+    "asarUnpack": [
+      "scripts/**/*"
+    ],
+    "linux": {
+      "target": "AppImage",
+      "category": "Development"
+    }
+  },
+  "devDependencies": {
+    "electron": "^latest",
+    "electron-builder": "^latest"
+  }
+}
