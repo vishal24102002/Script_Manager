@@ -6,787 +6,480 @@
 <title>Script Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════
-   CSS VARIABLES — DARK & LIGHT THEMES
-═══════════════════════════════════════════════ */
-:root, [data-theme="dark"] {
-  --bg-deep:      #0e1018;
-  --bg-base:      #141520;
-  --bg-raised:    #1a1d2e;
-  --bg-card:      #20253a;
-  --bg-hover:     #272c44;
-  --bg-active:    #2e344f;
-  --accent:       #7c6af7;
-  --accent-dim:   #5548c8;
-  --accent-glow:  rgba(124,106,247,0.16);
-  --accent2:      #f0875c;
-  --green:        #4ef08e;
-  --red:          #f06060;
-  --yellow:       #f0c050;
-  --cyan:         #4ee8f0;
-  --text-hi:      #eceef8;
-  --text-mid:     #8892b8;
-  --text-lo:      #4e5572;
-  --border:       #252a42;
-  --border-hi:    #343b60;
-  --shadow:       rgba(0,0,0,0.5);
-  --scrollbar:    #2e344f;
-  --input-bg:     #1a1d2e;
-  --input-border: #2e344f;
-  --log-bg:       #0e1018;
-  --tag-bg:       rgba(124,106,247,0.14);
-  --tag-color:    #a99ff5;
-  --readme-code:  #20253a;
-  color-scheme: dark;
+:root,[data-theme="dark"]{
+  --bg-deep:#0e1018;--bg-base:#141520;--bg-raised:#1a1d2e;--bg-card:#20253a;
+  --bg-hover:#272c44;--bg-active:#2e344f;--accent:#7c6af7;--accent-dim:#5548c8;
+  --accent-glow:rgba(124,106,247,0.16);--accent2:#f0875c;--green:#4ef08e;
+  --red:#f06060;--yellow:#f0c050;--cyan:#4ee8f0;--text-hi:#eceef8;
+  --text-mid:#8892b8;--text-lo:#4e5572;--border:#252a42;--border-hi:#343b60;
+  --shadow:rgba(0,0,0,0.5);--scrollbar:#2e344f;--log-bg:#0e1018;
+  --tag-bg:rgba(124,106,247,0.14);--tag-color:#a99ff5;--readme-code:#20253a;
+  color-scheme:dark;
 }
+[data-theme="light"]{
+  --bg-deep:#f0f2f8;--bg-base:#ffffff;--bg-raised:#f8f9fc;--bg-card:#eef0f8;
+  --bg-hover:#e4e7f4;--bg-active:#dde0f5;--accent:#5b4fd4;--accent-dim:#4438b0;
+  --accent-glow:rgba(91,79,212,0.12);--accent2:#d96030;--green:#1e9652;
+  --red:#d63030;--yellow:#c07800;--cyan:#0c8c98;--text-hi:#1a1c2e;
+  --text-mid:#4a5070;--text-lo:#9298b8;--border:#dde0f0;--border-hi:#c8ccdf;
+  --shadow:rgba(30,40,90,0.12);--scrollbar:#c8ccdf;--log-bg:#f4f5fc;
+  --tag-bg:rgba(91,79,212,0.10);--tag-color:#5b4fd4;--readme-code:#eef0f8;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Syne',sans-serif;background:var(--bg-deep);color:var(--text-hi);height:100vh;display:flex;overflow:hidden;user-select:none}
 
-[data-theme="light"] {
-  --bg-deep:      #f0f2f8;
-  --bg-base:      #ffffff;
-  --bg-raised:    #f8f9fc;
-  --bg-card:      #eef0f8;
-  --bg-hover:     #e4e7f4;
-  --bg-active:    #dde0f5;
-  --accent:       #5b4fd4;
-  --accent-dim:   #4438b0;
-  --accent-glow:  rgba(91,79,212,0.12);
-  --accent2:      #d96030;
-  --green:        #1e9652;
-  --red:          #d63030;
-  --yellow:       #c07800;
-  --cyan:         #0c8c98;
-  --text-hi:      #1a1c2e;
-  --text-mid:     #4a5070;
-  --text-lo:      #9298b8;
-  --border:       #dde0f0;
-  --border-hi:    #c8ccdf;
-  --shadow:       rgba(30,40,90,0.12);
-  --scrollbar:    #c8ccdf;
-  --input-bg:     #f8f9fc;
-  --input-border: #d0d4e8;
-  --log-bg:       #f4f5fc;
-  --tag-bg:       rgba(91,79,212,0.10);
-  --tag-color:    #5b4fd4;
-  --readme-code:  #eef0f8;
-  color-scheme: light;
-}
+/*── ICON SIDEBAR ──*/
+#icon-sidebar{width:50px;background:var(--bg-raised);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:3px;flex-shrink:0;z-index:10}
+.icon-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:8px;box-shadow:0 2px 14px var(--accent-glow)}
+.icon-btn{width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-lo);transition:all .15s;border:none;background:transparent;flex-shrink:0}
+.icon-btn:hover{background:var(--bg-hover);color:var(--text-hi)}
+.icon-btn.active{background:var(--accent-glow);color:var(--accent)}
+.icon-btn svg{width:17px;height:17px;pointer-events:none}
+.icon-spacer{flex:1}
+.icon-divider{width:26px;height:1px;background:var(--border);margin:3px 0}
 
-/* ═══════════════════════════════════════════════
-   BASE RESET
-═══════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/*── PANEL SIDEBAR ──*/
+#panel-sidebar{width:268px;background:var(--bg-base);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease;overflow:hidden;flex-shrink:0}
+#panel-sidebar.collapsed{width:0}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border);height:50px;flex-shrink:0}
+.panel-title{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mid);white-space:nowrap}
+.panel-toggle{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-lo);transition:all .15s;background:transparent;border:none}
+.panel-toggle:hover{background:var(--bg-hover);color:var(--text-hi)}
+.panel-toggle svg{width:13px;height:13px}
+.search-wrap{padding:9px 11px;border-bottom:1px solid var(--border);position:relative;flex-shrink:0}
+.search-input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:7px 10px 7px 28px;color:var(--text-hi);font-family:'Syne',sans-serif;font-size:12px;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-lo)}
+.search-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--text-lo);pointer-events:none}
+.search-icon svg{width:12px;height:12px}
+#scripts-list{flex:1;overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:3px}
+#scripts-list::-webkit-scrollbar{width:3px}
+#scripts-list::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:2px}
+.script-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid transparent;background:var(--bg-card);overflow:hidden;flex-shrink:0}
+.script-item:hover{background:var(--bg-hover);border-color:var(--border-hi)}
+.script-item.active{background:var(--bg-active);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-glow),inset 0 0 14px var(--accent-glow)}
+.script-dot{width:6px;height:6px;border-radius:50%;background:var(--text-lo);flex-shrink:0}
+.script-item.active .script-dot{background:var(--accent);box-shadow:0 0 5px var(--accent)}
+.script-item.running .script-dot{background:var(--green);box-shadow:0 0 7px var(--green);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.script-info{flex:1;overflow:hidden;min-width:0}
+.script-name{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-hi)}
+.script-sub{font-size:10px;color:var(--text-lo);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.script-input-badge{font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;background:var(--tag-bg);color:var(--tag-color);flex-shrink:0}
+.script-actions{display:flex;gap:2px;flex-shrink:0}
+.sa-btn{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-mid);transition:all .15s;background:transparent;border:none}
+.sa-btn:hover{background:var(--bg-deep)}
+.sa-btn.play:hover{color:var(--green)}
+.sa-btn.info:hover{color:var(--cyan)}
+.sa-btn svg{width:12px;height:12px}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 14px;color:var(--text-lo);font-size:11.5px;text-align:center;gap:7px;flex:1}
+.empty-state svg{width:28px;height:28px;opacity:.35}
+.panel-bottom{border-top:1px solid var(--border);padding:7px;flex-shrink:0}
+.bottom-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:500;color:var(--text-mid);background:transparent;border:none;width:100%;font-family:'Syne',sans-serif}
+.bottom-btn svg{width:14px;height:14px;flex-shrink:0}
+.bottom-btn:hover{background:var(--bg-hover);color:var(--text-hi)}
 
-body {
-  font-family: 'Syne', sans-serif;
-  background: var(--bg-deep);
-  color: var(--text-hi);
-  height: 100vh;
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-  transition: background 0.2s, color 0.2s;
-}
+/*── MAIN ──*/
+#main{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
 
-/* ═══════════════════════════════════════════════
-   ICON SIDEBAR (far left)
-═══════════════════════════════════════════════ */
-#icon-sidebar {
-  width: 50px;
-  background: var(--bg-raised);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 0;
-  gap: 3px;
-  z-index: 100;
-  flex-shrink: 0;
+/*── TOPBAR — 3-column grid keeps tabs EXACTLY centered ──*/
+#topbar{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  height:50px;
+  padding:0 12px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-base);
+  flex-shrink:0;
+  gap:8px;
 }
+.tb-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.tb-center{display:flex;align-items:center;justify-content:center}
+.tb-right{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 
-.icon-logo {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 14px var(--accent-glow);
-  flex-shrink: 0;
-}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-mid);overflow:hidden}
+.breadcrumb .sep{opacity:.4}
+.breadcrumb .crumb-active{color:var(--text-hi);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.icon-btn {
-  width: 36px; height: 36px;
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  color: var(--text-lo);
-  transition: all 0.18s ease;
-  border: none; background: transparent;
-  position: relative;
-}
-.icon-btn:hover { background: var(--bg-hover); color: var(--text-hi); }
-.icon-btn.active { background: var(--accent-glow); color: var(--accent); box-shadow: inset 2px 0 0 var(--accent); }
-.icon-btn svg { width: 17px; height: 17px; }
-.icon-spacer { flex: 1; }
-.icon-divider { width: 26px; height: 1px; background: var(--border); margin: 3px 0; }
+/*── TABS ──*/
+.tab-group{display:flex;gap:2px;background:var(--bg-raised);border:1px solid var(--border);border-radius:9px;padding:3px}
+.tab-btn{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:6px;font-size:11.5px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .15s;background:transparent;border:none;color:var(--text-lo);font-family:'Syne',sans-serif;white-space:nowrap}
+.tab-btn svg{width:11px;height:11px;opacity:.6;flex-shrink:0}
+.tab-btn:hover{background:var(--bg-hover);color:var(--text-hi)}
+.tab-btn.active{background:var(--bg-active);color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.tab-btn.active svg{opacity:1}
 
-/* ═══════════════════════════════════════════════
-   PANEL SIDEBAR (scripts/search)
-═══════════════════════════════════════════════ */
-#panel-sidebar {
-  width: 268px;
-  background: var(--bg-base);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  transition: width 0.24s cubic-bezier(0.4,0,0.2,1);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-#panel-sidebar.collapsed { width: 0; }
+/*── BUTTONS ──*/
+.btn{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;font-size:11.5px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .15s;border:none;white-space:nowrap;font-family:'Syne',sans-serif;flex-shrink:0}
+.btn svg{width:12px;height:12px}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.btn-run{background:rgba(78,240,142,.14);color:var(--green)}
+.btn-run:hover{background:rgba(78,240,142,.26)}
+.btn-stop{background:rgba(240,96,96,.14);color:var(--red)}
+.btn-stop:hover{background:rgba(240,96,96,.26)}
+.btn-sec{background:var(--bg-raised);color:var(--text-mid);border:1px solid var(--border)}
+.btn-sec:hover{background:var(--bg-hover);color:var(--text-hi)}
+.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent-dim));color:#fff;box-shadow:0 2px 10px var(--accent-glow)}
+.btn-accent:hover{filter:brightness(1.1);box-shadow:0 4px 16px var(--accent-glow)}
 
-.panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 14px;
-  border-bottom: 1px solid var(--border);
-  min-height: 50px;
-  flex-shrink: 0;
-}
-.panel-title {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text-mid); white-space: nowrap;
-}
-.panel-toggle {
-  width: 22px; height: 22px; border-radius: 5px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text-lo);
-  transition: all 0.15s; background: transparent; border: none;
-}
-.panel-toggle:hover { background: var(--bg-hover); color: var(--text-hi); }
-.panel-toggle svg { width: 13px; height: 13px; }
+.status-badge{display:flex;align-items:center;gap:5px;font-size:10.5px;padding:3px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.status-badge.idle{background:var(--bg-raised);color:var(--text-lo)}
+.status-badge.running{background:rgba(78,240,142,.12);color:var(--green)}
+.status-badge.error{background:rgba(240,96,96,.12);color:var(--red)}
+.status-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.status-badge.running .status-dot{animation:pulse 1s infinite}
 
-.search-wrap {
-  padding: 9px 11px; border-bottom: 1px solid var(--border);
-  flex-shrink: 0; position: relative;
-}
-.search-input {
-  width: 100%; background: var(--bg-card);
-  border: 1px solid var(--border); border-radius: 7px;
-  padding: 7px 10px 7px 28px;
-  color: var(--text-hi); font-family: 'Syne', sans-serif; font-size: 12px;
-  outline: none; transition: all 0.15s;
-}
-.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
-.search-input::placeholder { color: var(--text-lo); }
-.search-icon {
-  position: absolute; left: 20px; top: 50%;
-  transform: translateY(-50%); color: var(--text-lo); pointer-events: none;
-}
-.search-icon svg { width: 12px; height: 12px; }
+.theme-pill{width:40px;height:22px;border-radius:11px;background:var(--bg-card);border:1.5px solid var(--border);position:relative;cursor:pointer;display:flex;align-items:center;padding:2px;flex-shrink:0;transition:border-color .15s}
+.theme-pill:hover{border-color:var(--accent)}
+.theme-pill .pip{width:16px;height:16px;border-radius:50%;background:var(--accent);transition:transform .2s ease;display:flex;align-items:center;justify-content:center;font-size:9px}
+[data-theme="light"] .theme-pill .pip{transform:translateX(18px)}
 
-#scripts-list {
-  flex: 1; overflow-y: auto;
-  padding: 7px; display: flex; flex-direction: column; gap: 3px;
-}
-#scripts-list::-webkit-scrollbar { width: 3px; }
-#scripts-list::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 2px; }
+/*── CONTENT WRAP ──*/
+#content-wrap{flex:1;display:flex;overflow:hidden;min-height:0}
+#content{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
 
-.script-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 10px; border-radius: 8px;
-  cursor: pointer; transition: all 0.15s;
-  border: 1px solid transparent;
-  background: var(--bg-card);
-  white-space: nowrap; overflow: hidden; flex-shrink: 0;
-}
-.script-item:hover { background: var(--bg-hover); border-color: var(--border-hi); }
-.script-item.active { background: var(--bg-active); border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-glow), inset 0 0 14px var(--accent-glow); }
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 
-.script-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--text-lo); flex-shrink: 0; transition: all 0.18s;
-}
-.script-item.active .script-dot { background: var(--accent); box-shadow: 0 0 5px var(--accent); }
-.script-item.running .script-dot { background: var(--green); box-shadow: 0 0 7px var(--green); animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+/*── WELCOME ──*/
+#welcome-panel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px;animation:fadeIn .2s ease}
+.welcome-icon{width:68px;height:68px;background:var(--accent-glow);border:1px solid var(--border-hi);border-radius:18px;display:flex;align-items:center;justify-content:center}
+.welcome-icon svg{width:32px;height:32px;color:var(--accent)}
+.welcome-title{font-size:20px;font-weight:800;color:var(--text-hi)}
+.welcome-sub{font-size:12.5px;color:var(--text-lo);text-align:center;max-width:320px;line-height:1.6}
+.welcome-hint{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--text-mid)}
+.welcome-hint svg{width:13px;height:13px;color:var(--accent);flex-shrink:0}
+.welcome-hint code{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:var(--bg-raised);padding:2px 5px;border-radius:4px}
 
-.script-name { flex: 1; font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; color: var(--text-hi); }
-.script-name.no-file { color: var(--text-lo); font-style: italic; }
-.script-input-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
-  padding: 2px 5px; border-radius: 4px;
-  background: var(--tag-bg); color: var(--tag-color);
-  flex-shrink: 0;
-}
+/*── LOGS ──*/
+#logs-panel{flex:1;display:flex;flex-direction:column;min-height:0;animation:fadeIn .16s ease}
+#log-toolbar{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border);background:var(--bg-base);flex-shrink:0}
+.log-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-lo)}
+.log-count{font-size:9.5px;padding:2px 7px;border-radius:10px;background:var(--bg-raised);color:var(--text-lo);font-family:'JetBrains Mono',monospace}
+#log-output{flex:1;overflow-y:auto;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;background:var(--log-bg)}
+#log-output::-webkit-scrollbar{width:5px}
+#log-output::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px}
+.log-line{display:flex;gap:9px;padding:.5px 0}
+.log-ts{color:var(--text-lo);flex-shrink:0;font-size:10.5px;padding-top:2px;min-width:68px}
+.log-text{flex:1;word-break:break-all}
+.log-stdout .log-text{color:var(--text-hi)}
+.log-stderr .log-text{color:var(--red)}
+.log-system .log-text{color:var(--cyan)}
+.log-success .log-text{color:var(--green)}
+.log-error .log-text{color:var(--red);font-weight:600}
+.log-divider .log-text{color:var(--text-lo);font-size:10.5px}
+.log-stdin .log-text{color:var(--yellow)}
+.log-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--text-lo);font-size:12.5px;font-family:'Syne',sans-serif}
+.log-empty svg{width:38px;height:38px;opacity:.2}
+.log-empty p{opacity:.5}
 
-.script-actions { display: flex; gap: 2px; flex-shrink: 0; }
-.sa-btn {
-  width: 24px; height: 24px; border-radius: 5px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text-mid);
-  transition: all 0.15s; background: transparent; border: none;
-}
-.sa-btn:hover { background: var(--bg-deep); color: var(--text-hi); }
-.sa-btn.play:hover { color: var(--green); }
-.sa-btn.info:hover { color: var(--cyan); }
-.sa-btn svg { width: 12px; height: 12px; }
+/*── STDIN BAR ──*/
+#stdin-bar{display:none;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-raised);border-top:1px solid var(--border);flex-shrink:0}
+#stdin-bar.visible{display:flex}
+.stdin-lbl{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--cyan);white-space:nowrap;flex-shrink:0}
+.stdin-lbl::before{content:'? ';color:var(--yellow);font-weight:700}
+#stdin-input{flex:1;background:var(--bg-card);border:1.5px solid var(--accent);border-radius:6px;padding:6px 10px;color:var(--text-hi);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none}
+.stdin-send{padding:6px 14px;border-radius:6px;background:var(--accent);color:#fff;font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;border:none;cursor:pointer}
+.stdin-send:hover{filter:brightness(1.15)}
 
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 28px 14px;
-  color: var(--text-lo); font-size: 11.5px; text-align: center; gap: 7px;
-}
-.empty-state svg { width: 28px; height: 28px; opacity: 0.35; }
+/*── README ──*/
+#readme-panel{flex:1;display:flex;flex-direction:column;min-height:0;animation:fadeIn .16s ease}
+#readme-output{flex:1;overflow-y:auto;padding:28px 34px;background:var(--bg-deep);font-size:13.5px;line-height:1.82;color:var(--text-hi)}
+#readme-output::-webkit-scrollbar{width:5px}
+#readme-output::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px}
+#readme-output h1{font-size:20px;font-weight:800;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:9px;margin-bottom:14px}
+#readme-output h2{font-size:15px;font-weight:700;color:var(--text-hi);margin:20px 0 7px}
+#readme-output h3{font-size:13px;font-weight:700;color:var(--cyan);margin:14px 0 5px}
+#readme-output p{margin-bottom:9px;color:var(--text-mid)}
+#readme-output ul,#readme-output ol{padding-left:20px;margin-bottom:9px;color:var(--text-mid)}
+#readme-output li{margin-bottom:3px}
+#readme-output code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--readme-code);padding:2px 5px;border-radius:4px;color:var(--accent2)}
+#readme-output pre{background:var(--readme-code);border:1px solid var(--border);border-radius:8px;padding:13px 15px;overflow-x:auto;margin:10px 0}
+#readme-output pre code{background:none;padding:0;color:var(--text-hi);font-size:12px}
+#readme-output strong{color:var(--text-hi);font-weight:700}
+#readme-output hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+#readme-output blockquote{border-left:3px solid var(--accent);padding-left:13px;color:var(--text-mid);margin:10px 0}
+.readme-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--text-lo);font-size:12.5px;font-family:'Syne',sans-serif}
+.readme-empty svg{width:38px;height:38px;opacity:.2}
 
-.panel-bottom {
-  border-top: 1px solid var(--border);
-  padding: 7px; display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
-}
-.bottom-btn {
-  display: flex; align-items: center; gap: 9px;
-  padding: 8px 10px; border-radius: 6px;
-  cursor: pointer; transition: all 0.15s;
-  font-size: 12px; font-weight: 500; color: var(--text-mid);
-  background: transparent; border: none; width: 100%; white-space: nowrap;
-}
-.bottom-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-.bottom-btn:hover { background: var(--bg-hover); color: var(--text-hi); }
+/*── CODE ──*/
+#code-panel{flex:1;display:flex;flex-direction:column;min-height:0;animation:fadeIn .16s ease}
+#code-toolbar{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border);background:var(--bg-base);flex-shrink:0}
+.code-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-lo)}
+.code-filename{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-mid);background:var(--bg-card);padding:2px 8px;border-radius:5px;border:1px solid var(--border)}
+#code-output{flex:1;overflow:auto;background:var(--bg-deep)}
+#code-output::-webkit-scrollbar{width:5px;height:5px}
+#code-output::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px}
+.code-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--text-lo);font-size:12.5px;font-family:'Syne',sans-serif}
+.code-empty svg{width:38px;height:38px;opacity:.2}
+.code-empty p{opacity:.5}
+.code-content{padding:16px 0;min-width:fit-content;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7}
+.code-line{display:flex;min-height:21px}
+.code-line:hover{background:rgba(124,106,247,.05)}
+.code-ln{width:52px;text-align:right;padding:0 16px 0 0;color:var(--text-lo);font-size:11px;flex-shrink:0;user-select:none;border-right:1px solid var(--border);margin-right:16px}
+.code-text{flex:1;white-space:pre;padding-right:24px}
+.kw{color:#c792ea}.str{color:#c3e88d}.num{color:#f78c6c}
+.cm{color:#546e7a;font-style:italic}.fn{color:#82aaff}.bi{color:#ffcb6b}
+.op{color:#89ddff}.cl{color:#ffcb6b}.dc{color:#89ddff}
+[data-theme="light"] .kw{color:#7c4dff}[data-theme="light"] .str{color:#388e3c}
+[data-theme="light"] .num{color:#e65100}[data-theme="light"] .cm{color:#90a4ae}
+[data-theme="light"] .fn{color:#1565c0}[data-theme="light"] .bi{color:#c77800}
+[data-theme="light"] .op{color:#0097a7}[data-theme="light"] .cl{color:#c77800}
 
-/* ═══════════════════════════════════════════════
-   MAIN AREA
-═══════════════════════════════════════════════ */
-#main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+/*── INPUT SIDEBAR ──*/
+#input-sidebar{width:0;overflow:hidden;transition:width .22s ease;background:var(--bg-base);border-left:0px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+#input-sidebar.open{width:272px;border-left-width:1px}
+.isb-header{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border);height:50px;flex-shrink:0}
+.isb-title{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mid)}
+.isb-script{font-size:11px;font-weight:600;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#input-sidebar-body{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:14px}
+.input-group{display:flex;flex-direction:column;gap:5px}
+.input-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-lo);display:flex;align-items:center;gap:5px}
+.input-req{color:var(--red);font-size:10px}
+.input-desc{font-size:11px;color:var(--text-lo);line-height:1.4}
+.field-input,.field-select,.field-textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-hi);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;transition:border-color .15s}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--accent)}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--text-lo)}
+.field-textarea{resize:vertical;min-height:70px;line-height:1.5}
+.isb-footer{padding:12px;border-top:1px solid var(--border);flex-shrink:0}
+.run-inputs-btn{width:100%;padding:10px;background:linear-gradient(135deg,var(--accent),var(--accent-dim));border:none;border-radius:8px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 2px 12px var(--accent-glow)}
+.run-inputs-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.run-inputs-btn svg{width:13px;height:13px}
+.no-inputs{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 14px;gap:10px;color:var(--text-lo);font-size:11.5px;text-align:center}
+.no-inputs svg{width:30px;height:30px;opacity:.3}
 
-#topbar {
-  display: flex; align-items: center;
-  padding: 0 16px; height: 50px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-base); gap: 10px; flex-shrink: 0;
-}
-.breadcrumb { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--text-mid); }
-.breadcrumb .sep { opacity: 0.4; }
-.breadcrumb .active { color: var(--text-hi); font-weight: 600; }
-.topbar-spacer { flex: 1; }
+/*── METADATA SIDEBAR ──*/
+#meta-sidebar{width:0;overflow:hidden;transition:width .22s ease;background:var(--bg-base);border-left:0px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+#meta-sidebar.open{width:290px;border-left-width:1px}
+.msb-header{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border);height:50px;flex-shrink:0}
+.msb-title{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mid)}
+.msb-script{font-size:11px;font-weight:600;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.msb-body{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.msb-body::-webkit-scrollbar{width:3px}
+.msb-body::-webkit-scrollbar-thumb{background:var(--scrollbar)}
+.meta-card{background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.meta-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-card);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-mid)}
+.meta-card-body{padding:12px}
+.meta-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border)}
+.meta-row:last-child{border-bottom:none}
+.meta-lbl{color:var(--text-lo);font-size:11px}
+.meta-val{color:var(--text-hi);font-family:'JetBrains Mono',monospace;font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badges{display:flex;gap:4px;flex-wrap:wrap}
+.badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.badge.py{background:rgba(78,240,142,.14);color:var(--green)}
+.badge.md{background:rgba(78,232,240,.14);color:var(--cyan)}
+.badge.cfg{background:rgba(240,192,80,.14);color:var(--yellow)}
+.file-list{list-style:none}
+.file-list li{display:flex;align-items:center;gap:8px;padding:5px 0;font-family:'JetBrains Mono',monospace;font-size:11px;border-bottom:1px solid var(--border)}
+.file-list li:last-child{border-bottom:none}
+.file-nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-sz{color:var(--text-lo);font-size:10px}
+.f-py{color:var(--green)}.f-md{color:var(--cyan)}.f-cfg{color:var(--yellow)}
+.fc{font-size:10px;color:var(--text-lo);font-family:'JetBrains Mono',monospace}
+.meta-actions{display:flex;flex-direction:column;gap:8px}
+.meta-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--bg-raised);color:var(--text-hi);width:100%;font-family:'Syne',sans-serif}
+.meta-btn:hover{background:var(--bg-hover);transform:translateY(-1px)}
+.meta-btn.danger{background:rgba(240,96,96,.14);color:var(--red);border-color:transparent}
+.meta-btn.danger:hover{background:rgba(240,96,96,.26)}
+.meta-btn.sec{color:var(--text-mid)}
+.meta-btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none;transform:none!important}
+.meta-btn svg{width:14px;height:14px}
+.meta-btn-row{display:flex;gap:8px}
+.meta-btn-row .meta-btn{flex:1}
+.meta-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:10px;border:1px dashed var(--border);border-radius:8px}
+.meta-empty svg{width:36px;height:36px;opacity:.2}
+.meta-empty p{font-size:11.5px;color:var(--text-mid)}
 
-.tab-group { display: flex; gap: 2px; }
-.tab-btn {
-  padding: 4px 13px; border-radius: 6px;
-  font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.15s;
-  letter-spacing: 0.04em; background: transparent; border: none; color: var(--text-lo);
-}
-.tab-btn:hover { background: var(--bg-raised); color: var(--text-hi); }
-.tab-btn.active { background: var(--bg-active); color: var(--accent); }
+/*── MODALS ──*/
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,10,22,.75);z-index:200;align-items:center;justify-content:center}
+#modal-overlay.open{display:flex}
+.modal{background:var(--bg-raised);border:1px solid var(--border-hi);border-radius:13px;width:430px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 56px var(--shadow);animation:modalIn .18s ease}
+.modal.sm{width:370px}
+.modal.danger{border-left:3px solid var(--red)}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg-raised);z-index:1}
+.modal-title{font-size:13.5px;font-weight:700}
+.modal.danger .modal-title{color:var(--red)}
+.modal-x{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-lo);transition:all .15s;background:transparent;border:none}
+.modal-x:hover{background:var(--bg-hover);color:var(--text-hi)}
+.modal-x svg{width:14px;height:14px}
+.modal-body{padding:18px;display:flex;flex-direction:column;gap:14px}
+.modal-ftr{display:flex;justify-content:flex-end;gap:8px;padding:13px 18px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--bg-raised)}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-lbl{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-lo)}
+.form-input{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text-hi);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;transition:border-color .15s;width:100%}
+.form-input:focus{border-color:var(--accent)}
+.form-row{display:flex;gap:8px;align-items:flex-end}
+.form-row .form-input{flex:1}
+.warn-box{font-size:12px;color:var(--text-lo);padding:10px;background:var(--bg-deep);border-radius:6px;border-left:2px solid var(--yellow)}
+.theme-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.theme-row-lbl{font-size:12px;font-weight:600;color:var(--text-hi)}
+.theme-row-sub{font-size:11px;color:var(--text-lo)}
+.swatches{display:flex;gap:6px}
+.swatch{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:13px}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+.avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 10px}
 
-.status-badge {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 10.5px; padding: 3px 10px; border-radius: 20px;
-  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.03em;
-}
-.status-badge.idle    { background: var(--bg-raised); color: var(--text-lo); }
-.status-badge.running { background: rgba(78,240,142,0.12); color: var(--green); }
-.status-badge.error   { background: rgba(240,96,96,0.12); color: var(--red); }
-.status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-.status-badge.running .status-dot { animation: pulse 1s infinite; }
+/*── FILE PICKER (New Script) ──*/
+.file-pick-row{display:flex;gap:8px;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:7px 10px}
+.file-pick-lbl{flex:1;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-lo);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-pick-lbl.has{color:var(--green)}
+.file-pick-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:5px;background:var(--bg-hover);border:1px solid var(--border-hi);color:var(--text-mid);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:600;white-space:nowrap;transition:all .15s}
+.file-pick-btn svg{width:11px;height:11px}
+.file-pick-btn:hover{background:var(--accent-glow);color:var(--accent);border-color:var(--accent)}
+.path-hint{font-size:10.5px;color:var(--text-lo);margin-top:3px}
+.path-hint span{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
 
-.action-btn {
-  display: flex; align-items: center; gap: 5px;
-  padding: 5px 13px; border-radius: 6px;
-  font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.15s;
-  letter-spacing: 0.04em; border: none; white-space: nowrap;
-}
-.action-btn svg { width: 12px; height: 12px; }
-.action-btn.run  { background: rgba(78,240,142,0.14); color: var(--green); }
-.action-btn.run:hover { background: rgba(78,240,142,0.26); }
-.action-btn.stop { background: rgba(240,96,96,0.14); color: var(--red); }
-.action-btn.stop:hover { background: rgba(240,96,96,0.26); }
-.action-btn.secondary { background: var(--bg-raised); color: var(--text-mid); border: 1px solid var(--border); }
-.action-btn.secondary:hover { background: var(--bg-hover); color: var(--text-hi); }
-.action-btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
-
-/* ═══════════════════════════════════════════════
-   CONTENT SPLIT (logs+readme | right sidebar)
-═══════════════════════════════════════════════ */
-#content-wrap { flex: 1; display: flex; min-height: 0; }
-
-#content {
-  flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0;
-}
-
-.content-panel { flex: 1; display: flex; flex-direction: column; min-height: 0; animation: fadeIn 0.16s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:none} }
-
-/* ═══════════════════════════════════════════════
-   RIGHT INPUT SIDEBAR
-═══════════════════════════════════════════════ */
-#input-sidebar {
-  width: 0;
-  overflow: hidden;
-  transition: width 0.24s cubic-bezier(0.4,0,0.2,1);
-  background: var(--bg-base);
-  border-left: 0px solid var(--border);
-  display: flex; flex-direction: column;
-  flex-shrink: 0;
-}
-#input-sidebar.open {
-  width: 272px;
-  border-left-width: 1px;
-}
-
-.input-sidebar-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 14px; border-bottom: 1px solid var(--border);
-  min-height: 50px; flex-shrink: 0;
-}
-.input-sidebar-title { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-mid); white-space: nowrap; }
-.input-sidebar-script { font-size: 11px; font-weight: 600; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-#input-sidebar-body {
-  flex: 1; overflow-y: auto; padding: 14px 12px;
-  display: flex; flex-direction: column; gap: 14px;
-}
-#input-sidebar-body::-webkit-scrollbar { width: 3px; }
-#input-sidebar-body::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 2px; }
-
-.input-group { display: flex; flex-direction: column; gap: 5px; }
-.input-label {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-lo); display: flex; align-items: center; gap: 5px;
-}
-.input-required { color: var(--red); font-size: 10px; }
-.input-desc { font-size: 11px; color: var(--text-lo); line-height: 1.4; margin-bottom: 2px; }
-
-.field-input {
-  width: 100%; background: var(--input-bg);
-  border: 1px solid var(--input-border); border-radius: 7px;
-  padding: 8px 10px; color: var(--text-hi);
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
-  outline: none; transition: all 0.15s;
-}
-.field-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
-.field-input::placeholder { color: var(--text-lo); }
-
-.field-select {
-  width: 100%; background: var(--input-bg);
-  border: 1px solid var(--input-border); border-radius: 7px;
-  padding: 8px 10px; color: var(--text-hi);
-  font-family: 'Syne', sans-serif; font-size: 12px;
-  outline: none; cursor: pointer; transition: all 0.15s;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238892b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-}
-.field-select:focus { border-color: var(--accent); }
-
-.field-checkbox-wrap {
-  display: flex; align-items: center; gap: 8px; cursor: pointer;
-}
-.field-checkbox {
-  width: 15px; height: 15px;
-  border: 1.5px solid var(--input-border); border-radius: 4px;
-  background: var(--input-bg); cursor: pointer;
-  accent-color: var(--accent);
-}
-
-.field-textarea {
-  width: 100%; background: var(--input-bg);
-  border: 1px solid var(--input-border); border-radius: 7px;
-  padding: 8px 10px; color: var(--text-hi);
-  font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
-  outline: none; resize: vertical; min-height: 70px;
-  transition: all 0.15s; line-height: 1.5;
-}
-.field-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
-.field-textarea::placeholder { color: var(--text-lo); }
-
-.input-sidebar-footer {
-  padding: 12px; border-top: 1px solid var(--border); flex-shrink: 0;
-}
-.run-with-inputs-btn {
-  width: 100%; padding: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
-  border: none; border-radius: 8px;
-  color: #fff; font-family: 'Syne', sans-serif;
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.18s;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  letter-spacing: 0.04em; box-shadow: 0 2px 12px var(--accent-glow);
-}
-.run-with-inputs-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); filter: brightness(1.1); }
-.run-with-inputs-btn:active { transform: none; }
-.run-with-inputs-btn svg { width: 13px; height: 13px; }
-
-.no-inputs-state {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 28px 14px; gap: 10px;
-  color: var(--text-lo); font-size: 11.5px; text-align: center;
-}
-.no-inputs-state svg { width: 30px; height: 30px; opacity: 0.3; }
-
-/* ═══════════════════════════════════════════════
-   LOG PANEL
-═══════════════════════════════════════════════ */
-#log-toolbar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 14px; border-bottom: 1px solid var(--border);
-  background: var(--bg-base); flex-shrink: 0;
-}
-.log-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-lo); }
-.log-count { font-size: 9.5px; padding: 2px 7px; border-radius: 10px; background: var(--bg-raised); color: var(--text-lo); font-family: 'JetBrains Mono', monospace; }
-
-#log-output {
-  flex: 1; overflow-y: auto; padding: 10px 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7;
-  background: var(--log-bg);
-}
-#log-output::-webkit-scrollbar { width: 5px; }
-#log-output::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
-
-.log-line { display: flex; gap: 9px; padding: 0.5px 0; }
-.log-ts { color: var(--text-lo); flex-shrink: 0; font-size: 10.5px; padding-top: 2px; min-width: 68px; }
-.log-text { flex: 1; word-break: break-all; }
-.log-stdout  .log-text { color: var(--text-hi); }
-.log-stderr  .log-text { color: var(--red); }
-.log-system  .log-text { color: var(--cyan); }
-.log-success .log-text { color: var(--green); }
-.log-error   .log-text { color: var(--red); font-weight: 600; }
-.log-divider .log-text { color: var(--text-lo); font-size: 10.5px; }
-
-.log-empty {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; height: 100%;
-  gap: 10px; color: var(--text-lo); font-size: 12.5px; font-family: 'Syne', sans-serif;
-}
-.log-empty svg { width: 38px; height: 38px; opacity: 0.22; }
-.log-empty p { opacity: 0.55; }
-
-/* ── STDIN INPUT BAR ── */
-#stdin-bar {
-  display: none;
-  align-items: center; gap: 8px;
-  padding: 8px 12px;
-  background: var(--bg-raised);
-  border-top: 1px solid var(--border);
-  flex-shrink: 0;
-  animation: fadeIn 0.18s ease;
-}
-#stdin-bar.visible { display: flex; }
-.stdin-prompt-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px; color: var(--cyan);
-  white-space: nowrap; overflow: hidden;
-  text-overflow: ellipsis; max-width: 200px;
-  flex-shrink: 0;
-}
-.stdin-prompt-label::before { content: '? '; color: var(--yellow); font-weight: 700; }
-#stdin-input {
-  flex: 1; background: var(--bg-card);
-  border: 1.5px solid var(--accent);
-  border-radius: 6px; padding: 6px 10px;
-  color: var(--text-hi); font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; outline: none;
-  box-shadow: 0 0 0 2px var(--accent-glow);
-}
-#stdin-input::placeholder { color: var(--text-lo); }
-.stdin-send-btn {
-  padding: 6px 14px; border-radius: 6px;
-  background: var(--accent); color: #fff;
-  font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700;
-  border: none; cursor: pointer; transition: all 0.15s; white-space: nowrap;
-}
-.stdin-send-btn:hover { filter: brightness(1.15); }
-.log-stdin .log-text { color: var(--yellow); }
-.log-stdin .log-ts::before { content: '▷ '; }
-
-/* ═══════════════════════════════════════════════
-   README PANEL
-═══════════════════════════════════════════════ */
-#readme-output {
-  flex: 1; overflow-y: auto; padding: 28px 34px;
-  background: var(--bg-deep); font-family: 'Syne', sans-serif;
-  font-size: 13.5px; line-height: 1.82; color: var(--text-hi);
-}
-#readme-output::-webkit-scrollbar { width: 5px; }
-#readme-output::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
-#readme-output h1 { font-size: 20px; font-weight: 800; margin-bottom: 14px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 9px; }
-#readme-output h2 { font-size: 15px; font-weight: 700; margin: 20px 0 7px; color: var(--text-hi); }
-#readme-output h3 { font-size: 13px; font-weight: 700; margin: 14px 0 5px; color: var(--cyan); }
-#readme-output p  { margin-bottom: 9px; color: var(--text-mid); }
-#readme-output ul, #readme-output ol { padding-left: 20px; margin-bottom: 9px; color: var(--text-mid); }
-#readme-output li { margin-bottom: 3px; }
-#readme-output code { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; background: var(--readme-code); padding: 2px 5px; border-radius: 4px; color: var(--accent2); }
-#readme-output pre { background: var(--readme-code); border: 1px solid var(--border); border-radius: 8px; padding: 13px 15px; overflow-x: auto; margin: 10px 0; }
-#readme-output pre code { background: none; padding: 0; color: var(--text-hi); font-size: 12px; }
-#readme-output strong { color: var(--text-hi); font-weight: 700; }
-#readme-output hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
-#readme-output blockquote { border-left: 3px solid var(--accent); padding-left: 13px; color: var(--text-mid); margin: 10px 0; }
-.readme-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; color: var(--text-lo); font-size: 12.5px; }
-.readme-empty svg { width: 38px; height: 38px; opacity: 0.22; }
-
-/* ═══════════════════════════════════════════════
-   WELCOME PANEL
-═══════════════════════════════════════════════ */
-#welcome-panel {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14px; color: var(--text-lo); padding: 40px;
-}
-.welcome-icon {
-  width: 68px; height: 68px;
-  background: linear-gradient(135deg, var(--accent-glow), transparent);
-  border: 1px solid var(--border-hi); border-radius: 18px;
-  display: flex; align-items: center; justify-content: center;
-}
-.welcome-icon svg { width: 32px; height: 32px; color: var(--accent); }
-.welcome-title { font-size: 19px; font-weight: 800; color: var(--text-hi); }
-.welcome-sub { font-size: 12.5px; color: var(--text-lo); text-align: center; max-width: 300px; line-height: 1.6; }
-.welcome-hint {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 9px 14px;
-  font-size: 11.5px; color: var(--text-mid); margin-top: 6px;
-}
-.welcome-hint svg { width: 13px; height: 13px; color: var(--accent); flex-shrink: 0; }
-
-/* ═══════════════════════════════════════════════
-   THEME TOGGLE
-═══════════════════════════════════════════════ */
-.theme-toggle {
-  width: 44px; height: 24px; border-radius: 12px;
-  background: var(--bg-card); border: 1.5px solid var(--border);
-  position: relative; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; padding: 2px;
-  flex-shrink: 0;
-}
-.theme-toggle .thumb {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--accent);
-  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px;
-  transform: translateX(0);
-}
-[data-theme="light"] .theme-toggle .thumb { transform: translateX(20px); }
-.theme-toggle:hover { border-color: var(--accent); }
-
-/* ═══════════════════════════════════════════════
-   MODAL
-═══════════════════════════════════════════════ */
-#modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(8,10,22,0.7);
-  z-index: 200; align-items: center; justify-content: center;
-}
-#modal-overlay.open { display: flex; }
-.modal-box {
-  background: var(--bg-raised); border: 1px solid var(--border-hi);
-  border-radius: 13px; width: 440px;
-  box-shadow: 0 20px 56px var(--shadow);
-  overflow: hidden; animation: modalIn 0.18s ease;
-}
-@keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(7px)} to{opacity:1;transform:none} }
-
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 15px 18px; border-bottom: 1px solid var(--border);
-}
-.modal-title { font-size: 13.5px; font-weight: 700; }
-.modal-close { width: 26px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-lo); transition: all 0.15s; background: transparent; border: none; }
-.modal-close:hover { background: var(--bg-hover); color: var(--text-hi); }
-.modal-close svg { width: 14px; height: 14px; }
-
-.modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-.form-field { display: flex; flex-direction: column; gap: 5px; }
-.form-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-lo); }
-.form-input { background: var(--bg-card); border: 1px solid var(--border); border-radius: 7px; padding: 8px 11px; color: var(--text-hi); font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; transition: all 0.15s; }
-.form-input:focus { border-color: var(--accent); }
-.form-row { display: flex; gap: 8px; align-items: flex-end; }
-.form-row .form-input { flex: 1; }
-
-.modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 13px 18px; border-top: 1px solid var(--border); }
-
-/* Theme section in modal */
-.theme-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-.theme-row-label { font-size: 12px; font-weight: 600; color: var(--text-hi); }
-.theme-row-sub { font-size: 11px; color: var(--text-lo); }
-.theme-swatches { display: flex; gap: 6px; }
-.theme-swatch {
-  width: 28px; height: 28px; border-radius: 7px; cursor: pointer;
-  border: 2px solid transparent; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; font-size: 13px;
-}
-.theme-swatch:hover { transform: scale(1.1); }
-.theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
-
-/* profile avatar */
-.profile-avatar {
-  width: 60px; height: 60px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 800; color: #fff; margin: 0 auto 14px;
-}
-
-/* ═══════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════ */
-#toast {
-  position: fixed; bottom: 22px; right: 22px;
-  background: var(--bg-raised); border: 1px solid var(--border-hi);
-  border-radius: 9px; padding: 11px 16px;
-  font-size: 12.5px; color: var(--text-hi);
-  box-shadow: 0 8px 28px var(--shadow);
-  z-index: 300; display: none; gap: 7px; align-items: center;
-  animation: toastIn 0.18s ease;
-  max-width: 360px;
-}
-@keyframes toastIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
-#toast.show { display: flex; }
-#toast.success { border-left: 3px solid var(--green); }
-#toast.error   { border-left: 3px solid var(--red); }
-#toast svg { width: 14px; height: 14px; flex-shrink: 0; }
-#toast.success svg { color: var(--green); }
-#toast.error   svg { color: var(--red); }
+/*── TOAST ──*/
+#toast{position:fixed;bottom:22px;right:22px;background:var(--bg-raised);border:1px solid var(--border-hi);border-radius:9px;padding:11px 16px;font-size:12.5px;color:var(--text-hi);box-shadow:0 8px 28px var(--shadow);z-index:400;display:none;align-items:center;gap:7px;max-width:360px}
+@keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#toast.show{display:flex;animation:toastIn .18s ease}
+#toast.success{border-left:3px solid var(--green)}
+#toast.error{border-left:3px solid var(--red)}
+#toast svg{width:14px;height:14px;flex-shrink:0}
+#toast.success svg{color:var(--green)}
+#toast.error svg{color:var(--red)}
 </style>
 </head>
 <body>
 
-<!-- ══ ICON SIDEBAR ══════════════════════════════════════════════════════════ -->
+<!-- ══ ICON SIDEBAR ══ -->
 <div id="icon-sidebar">
   <div class="icon-logo">⚡</div>
-
-  <button class="icon-btn active" id="iBtn-scripts" title="Scripts"
-    onclick="setActiveIcon(this); openPanel('scripts')">
+  <button class="icon-btn active" id="ib-scripts" title="Scripts" onclick="setActiveIcon(this);openPanel('scripts')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
   </button>
-
-  <button class="icon-btn" id="iBtn-search" title="Search"
-    onclick="setActiveIcon(this); openPanel('search')">
+  <button class="icon-btn" id="ib-search" title="Search" onclick="setActiveIcon(this);openPanel('search')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </button>
-
   <div class="icon-spacer"></div>
   <div class="icon-divider"></div>
-
   <button class="icon-btn" title="Toggle theme" onclick="toggleTheme()">
     <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
   </button>
-
   <button class="icon-btn" title="Settings" onclick="openSettings()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
   </button>
-
   <button class="icon-btn" title="Profile" onclick="openProfile()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
   </button>
 </div>
 
-<!-- ══ PANEL SIDEBAR ═════════════════════════════════════════════════════════ -->
+<!-- ══ PANEL SIDEBAR ══ -->
 <div id="panel-sidebar">
   <div class="panel-header">
     <span class="panel-title" id="panel-title">Scripts</span>
-    <button class="panel-toggle" onclick="collapsePanel()" title="Collapse">
+    <button class="panel-toggle" onclick="collapsePanel()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
   </div>
-
   <div class="search-wrap">
     <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
     <input class="search-input" id="search-input" type="text" placeholder="Filter scripts…" oninput="filterScripts(this.value)">
   </div>
-
   <div id="scripts-list">
-    <div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>Loading scripts…</span>
-    </div>
+    <div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Loading…</span></div>
   </div>
-
   <div class="panel-bottom">
     <button class="bottom-btn" onclick="reloadScripts()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       Reload Scripts
     </button>
     <button class="bottom-btn" onclick="openSettings()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg>
       Settings
     </button>
     <button class="bottom-btn" onclick="openProfile()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span id="profile-name-btn">Manage Profile</span>
+      <span id="profile-btn-name">Profile</span>
     </button>
   </div>
 </div>
 
-<!-- ══ MAIN ═══════════════════════════════════════════════════════════════════ -->
+<!-- ══ MAIN ══ -->
 <div id="main">
-  <!-- TOPBAR -->
+
+  <!-- TOPBAR: grid with 3 columns → tabs stay truly centered -->
   <div id="topbar">
-    <button id="expand-btn" class="action-btn secondary" style="display:none" onclick="expandPanel()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-
-    <div class="breadcrumb">
-      <span>Scripts</span>
-      <span class="sep">/</span>
-      <span class="active" id="bc-script">—</span>
+    <div class="tb-left">
+      <button id="expand-btn" class="btn btn-sec" style="display:none;padding:5px 8px" onclick="expandPanel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="breadcrumb">
+        <span style="flex-shrink:0">Scripts</span>
+        <span class="sep">/</span>
+        <span class="crumb-active" id="bc-name">—</span>
+      </div>
     </div>
 
-    <div class="topbar-spacer"></div>
-
-    <!-- Theme toggle -->
-    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
-      <div class="thumb" id="theme-thumb">🌙</div>
+    <div class="tb-center">
+      <div class="tab-group">
+        <button class="tab-btn active" id="tab-logs" onclick="setTab('logs')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Logs
+        </button>
+        <button class="tab-btn" id="tab-readme" onclick="setTab('readme')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          README
+        </button>
+        <button class="tab-btn" id="tab-code" onclick="setTab('code')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Code
+        </button>
+      </div>
     </div>
 
-    <div class="tab-group">
-      <button class="tab-btn active" id="tab-logs"   onclick="setTab('logs')">Logs</button>
-      <button class="tab-btn"        id="tab-readme" onclick="setTab('readme')">README</button>
+    <div class="tb-right">
+      <div class="theme-pill" onclick="toggleTheme()" title="Toggle theme">
+        <div class="pip" id="theme-pip">🌙</div>
+      </div>
+      <div id="status-badge" class="status-badge idle">
+        <span class="status-dot"></span><span id="status-text">Idle</span>
+      </div>
+      <button id="btn-run" class="btn btn-run" onclick="runScript()" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Run
+      </button>
+      <button id="btn-stop" class="btn btn-stop" onclick="stopScript()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"/></svg>Stop
+      </button>
+      <button class="btn btn-sec" onclick="toggleMeta()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Details
+      </button>
     </div>
+  </div><!-- /topbar -->
 
-    <div id="status-badge" class="status-badge idle">
-      <span class="status-dot"></span>
-      <span id="status-text">Idle</span>
-    </div>
-
-    <button id="btn-run"  class="action-btn run"  onclick="runCurrentScript()" disabled>
-      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Run
-    </button>
-    <button id="btn-stop" class="action-btn stop" onclick="stopCurrentScript()" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"/></svg>Stop
-    </button>
-    <button id="btn-save"  class="action-btn secondary" onclick="saveLogs()" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save
-    </button>
-    <button id="btn-clear" class="action-btn secondary" onclick="clearLogs()" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Clear
-    </button>
-  </div>
-
-  <!-- CONTENT WRAP (main + right sidebar) -->
+  <!-- CONTENT WRAP -->
   <div id="content-wrap">
-    <!-- CONTENT -->
+
+    <!-- Main panels -->
     <div id="content">
 
       <!-- Welcome -->
-      <div id="welcome-panel" class="content-panel">
-        <div class="welcome-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        </div>
+      <div id="welcome-panel">
+        <div class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
         <div class="welcome-title">Script Manager</div>
-        <div class="welcome-sub">Select a script from the sidebar to view its logs and README, or run it with inputs.</div>
+        <div class="welcome-sub">Select a script from the sidebar to view logs, README, and source code.</div>
         <div class="welcome-hint">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Place script folders inside <code style="font-family:JetBrains Mono,monospace;font-size:10.5px;background:var(--bg-card);padding:2px 5px;border-radius:4px">scripts/</code> — add <code style="font-family:JetBrains Mono,monospace;font-size:10.5px;background:var(--bg-card);padding:2px 5px;border-radius:4px">inputs.json</code> for input fields
+          Open <strong>Settings → Add New Script</strong> to import a script, or place script folders in <code>scripts/</code>
         </div>
       </div>
 
       <!-- Logs -->
-      <div id="logs-panel" class="content-panel" style="display:none">
+      <div id="logs-panel" style="display:none">
         <div id="log-toolbar">
           <span class="log-label">Output</span>
           <span class="log-count" id="log-count">0 lines</span>
           <div style="flex:1"></div>
+          <button id="btn-save" class="btn btn-sec" onclick="saveLogs()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+          </button>
+          <button id="btn-clear" class="btn btn-sec" onclick="clearLogs(true)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
         </div>
         <div id="log-output">
           <div class="log-empty">
@@ -794,17 +487,15 @@ body {
             <p>Run the script to see output here</p>
           </div>
         </div>
-      <!-- STDIN BAR: appears when script is waiting for input -->
-      <div id="stdin-bar">
-        <span class="stdin-prompt-label" id="stdin-prompt-text">Waiting for input</span>
-        <input id="stdin-input" type="text" placeholder="Type input and press Enter or Send…"
-               onkeydown="if(event.key==='Enter') sendStdinLine()">
-        <button class="stdin-send-btn" onclick="sendStdinLine()">Send ↵</button>
-      </div>
+        <div id="stdin-bar">
+          <span class="stdin-lbl" id="stdin-prompt-lbl">Waiting for input</span>
+          <input id="stdin-input" type="text" placeholder="Type and press Enter…" onkeydown="if(event.key==='Enter')sendStdin()">
+          <button class="stdin-send" onclick="sendStdin()">Send ↵</button>
+        </div>
       </div>
 
       <!-- README -->
-      <div id="readme-panel" class="content-panel" style="display:none">
+      <div id="readme-panel" style="display:none">
         <div id="readme-output">
           <div class="readme-empty">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -812,209 +503,349 @@ body {
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ══ RIGHT INPUT SIDEBAR ══════════════════════════════════════════ -->
-    <div id="input-sidebar">
-      <div class="input-sidebar-header">
-        <div>
-          <div class="input-sidebar-title">Script Inputs</div>
-          <div class="input-sidebar-script" id="input-sidebar-script-name">—</div>
+      <!-- Code -->
+      <div id="code-panel" style="display:none">
+        <div id="code-toolbar">
+          <span class="code-label">Source</span>
+          <span class="code-filename" id="code-fn">—</span>
+          <div style="flex:1"></div>
+          <button class="btn btn-sec" id="btn-copy" onclick="copyCode()" style="font-size:10.5px;padding:4px 10px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
         </div>
-        <button class="panel-toggle" onclick="closeInputSidebar()" title="Close">
+        <div id="code-output">
+          <div class="code-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <p>Select a script to view source code</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- Input Sidebar -->
+    <div id="input-sidebar">
+      <div class="isb-header">
+        <div>
+          <div class="isb-title">Script Inputs</div>
+          <div class="isb-script" id="isb-script-name">—</div>
+        </div>
+        <button class="panel-toggle" onclick="closeInputSidebar()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-
-      <div id="input-sidebar-body">
-        <!-- filled dynamically -->
-      </div>
-
-      <div class="input-sidebar-footer">
-        <button class="run-with-inputs-btn" id="run-inputs-btn" onclick="runWithInputs()">
+      <div id="input-sidebar-body"></div>
+      <div class="isb-footer">
+        <button class="run-inputs-btn" id="run-inputs-btn" onclick="runWithInputs()">
           <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Run with Inputs
         </button>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ══ SETTINGS MODAL ════════════════════════════════════════════════════════ -->
-<div id="modal-overlay" onclick="handleOverlayClick(event)">
-
-  <div class="modal-box" id="settings-modal" style="display:none">
-    <div class="modal-header">
-      <span class="modal-title">Settings</span>
-      <button class="modal-close" onclick="closeSettings()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <!-- Theme -->
-      <div class="form-field">
-        <div class="form-label">Appearance</div>
-        <div class="theme-row">
-          <div>
-            <div class="theme-row-label">Theme</div>
-            <div class="theme-row-sub" id="theme-name-label">Dark Mode</div>
+    <!-- Metadata Sidebar -->
+    <div id="meta-sidebar">
+      <div class="msb-header">
+        <div>
+          <div class="msb-title">Script Details</div>
+          <div class="msb-script" id="msb-name">—</div>
+        </div>
+        <button class="panel-toggle" onclick="toggleMeta()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="msb-body">
+        <div id="meta-empty" class="meta-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="8" y1="2" x2="8" y2="22"/><line x1="16" y1="2" x2="16" y2="22"/><line x1="2" y1="8" x2="22" y2="8"/><line x1="2" y1="16" x2="22" y2="16"/></svg>
+          <p>Select a script to view details</p>
+        </div>
+        <div id="meta-details" style="display:none;flex-direction:column;gap:12px">
+          <div class="meta-card">
+            <div class="meta-card-hdr">
+              <span>📋 Basic Info</span>
+              <div class="badges" id="script-badges"></div>
+            </div>
+            <div class="meta-card-body">
+              <div class="meta-row"><span class="meta-lbl">Name</span><span class="meta-val" id="meta-name">—</span></div>
+              <div class="meta-row"><span class="meta-lbl">Created</span><span class="meta-val" id="meta-created">—</span></div>
+              <div class="meta-row"><span class="meta-lbl">Modified</span><span class="meta-val" id="meta-modified">—</span></div>
+              <div class="meta-row"><span class="meta-lbl">Size</span><span class="meta-val" id="meta-size">—</span></div>
+            </div>
           </div>
-          <div class="theme-swatches">
-            <div class="theme-swatch active" id="swatch-dark"  onclick="setTheme('dark')"  title="Dark">🌙</div>
-            <div class="theme-swatch"        id="swatch-light" onclick="setTheme('light')" title="Light">☀️</div>
+          <div class="meta-card">
+            <div class="meta-card-hdr"><span>📁 Files</span><span class="fc" id="file-count">0 files</span></div>
+            <div class="meta-card-body"><ul class="file-list" id="file-list"></ul></div>
+          </div>
+          <div class="meta-card" id="cfg-card" style="display:none">
+            <div class="meta-card-hdr"><span>⚙️ Input Config</span></div>
+            <div class="meta-card-body"><pre id="cfg-preview" style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--bg-deep);border:1px solid var(--border);border-radius:6px;padding:8px;overflow-x:auto;white-space:pre-wrap;max-height:150px;overflow-y:auto;color:var(--text-mid)"></pre></div>
+          </div>
+          <div class="meta-actions">
+            <div class="meta-btn-row">
+              <button class="meta-btn" id="rename-btn" onclick="openRenameModal()" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>Rename
+              </button>
+              <button class="meta-btn danger" id="delete-btn" onclick="openDeleteModal()" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Delete
+              </button>
+            </div>
+            <button class="meta-btn sec" id="folder-btn" onclick="openFolder()" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Open Folder
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Scripts dir -->
+  </div><!-- /content-wrap -->
+</div><!-- /main -->
+
+<!-- ══ MODALS ══ -->
+<div id="modal-overlay" onclick="overlayClick(event)">
+
+  <!-- Settings — New Script button lives here -->
+  <div class="modal" id="settings-modal" style="display:none">
+    <div class="modal-hdr">
+      <span class="modal-title">⚙️ Settings</span>
+      <button class="modal-x" onclick="closeModal('settings-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
       <div class="form-field">
-        <label class="form-label">Scripts Directory</label>
+        <div class="form-lbl">Appearance</div>
+        <div class="theme-row">
+          <div><div class="theme-row-lbl">Theme</div><div class="theme-row-sub" id="theme-name-lbl">Dark Mode</div></div>
+          <div class="swatches">
+            <div class="swatch active" id="sw-dark" onclick="setTheme('dark')" title="Dark">🌙</div>
+            <div class="swatch" id="sw-light" onclick="setTheme('light')" title="Light">☀️</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-lbl">Scripts Directory</label>
         <div class="form-row">
           <input class="form-input" id="scripts-path-input" type="text" readonly placeholder="Loading…">
-          <button class="action-btn secondary" onclick="browsePath()">Browse</button>
+          <button class="btn btn-sec" onclick="browseScriptsPath()">Browse</button>
         </div>
       </div>
-
-      <!-- Python -->
       <div class="form-field">
-        <label class="form-label">Python Executable</label>
+        <label class="form-lbl">Python Executable</label>
         <input class="form-input" id="python-path-input" type="text" placeholder="python3">
       </div>
+      <!-- ADD NEW SCRIPT section -->
+      <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:8px">
+        <div class="form-lbl">Scripts</div>
+        <button class="btn btn-accent" style="width:100%;justify-content:center;padding:10px 16px;font-size:12.5px" onclick="closeModal('settings-modal');openNewScriptModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add New Script
+        </button>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="action-btn secondary" onclick="closeSettings()">Cancel</button>
-      <button class="action-btn run" onclick="saveSettings()">Save</button>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal('settings-modal')">Cancel</button>
+      <button class="btn btn-run" onclick="saveSettings()">Save</button>
     </div>
   </div>
 
-  <!-- Profile modal -->
-  <div class="modal-box" id="profile-modal" style="display:none">
-    <div class="modal-header">
-      <span class="modal-title">Profile</span>
-      <button class="modal-close" onclick="closeProfile()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+  <!-- Profile -->
+  <div class="modal" id="profile-modal" style="display:none">
+    <div class="modal-hdr">
+      <span class="modal-title">👤 Profile</span>
+      <button class="modal-x" onclick="closeModal('profile-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="modal-body">
-      <div class="profile-avatar" id="profile-avatar">U</div>
-      <div class="form-field">
-        <label class="form-label">Display Name</label>
-        <input class="form-input" id="profile-name-input" type="text" placeholder="Your name">
-      </div>
-      <div class="form-field">
-        <label class="form-label">Role / Title</label>
-        <input class="form-input" id="profile-role-input" type="text" placeholder="e.g. DevOps Engineer">
-      </div>
+      <div class="avatar" id="profile-avatar">U</div>
+      <div class="form-field"><label class="form-lbl">Display Name</label><input class="form-input" id="profile-name" type="text" placeholder="Your name"></div>
+      <div class="form-field"><label class="form-lbl">Role / Title</label><input class="form-input" id="profile-role" type="text" placeholder="e.g. DevOps Engineer"></div>
     </div>
-    <div class="modal-footer">
-      <button class="action-btn secondary" onclick="closeProfile()">Cancel</button>
-      <button class="action-btn run" onclick="saveProfile()">Save</button>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal('profile-modal')">Cancel</button>
+      <button class="btn btn-run" onclick="saveProfile()">Save</button>
     </div>
   </div>
-</div>
 
-<!-- ══ TOAST ══════════════════════════════════════════════════════════════════ -->
+  <!-- ✨ New Script — simplified: name, folder, .py file, README file, description -->
+  <div class="modal" id="new-script-modal" style="display:none">
+    <div class="modal-hdr">
+      <span class="modal-title">✨ New Script</span>
+      <button class="modal-x" onclick="closeModal('new-script-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-lbl">Script Name <span style="color:var(--red)">*</span></label>
+        <input class="form-input" id="ns-name" type="text" placeholder="e.g. my_script" oninput="syncFolder(this.value)">
+      </div>
+      <div class="form-field">
+        <label class="form-lbl">Folder Name <span style="color:var(--red)">*</span></label>
+        <input class="form-input" id="ns-folder" type="text" placeholder="Auto-filled from name">
+        <div class="path-hint">Base: <span id="ns-base-path">loading…</span></div>
+      </div>
+      <div class="form-field">
+        <label class="form-lbl">Python Script (.py) <span style="color:var(--red)">*</span></label>
+        <div class="file-pick-row">
+          <span class="file-pick-lbl" id="ns-py-lbl">No file selected</span>
+          <button class="file-pick-btn" onclick="document.getElementById('ns-py-input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Select .py
+          </button>
+        </div>
+        <input type="file" id="ns-py-input" accept=".py" style="display:none" onchange="onPySelected(this)">
+      </div>
+      <div class="form-field">
+        <label class="form-lbl">README File
+          <span style="color:var(--text-lo);font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px">(optional)</span>
+        </label>
+        <div class="file-pick-row">
+          <span class="file-pick-lbl" id="ns-md-lbl">No file selected</span>
+          <button class="file-pick-btn" onclick="document.getElementById('ns-md-input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Select .md
+          </button>
+        </div>
+        <input type="file" id="ns-md-input" accept=".md,.txt" style="display:none" onchange="onMdSelected(this)">
+      </div>
+      <div class="form-field">
+        <label class="form-lbl">Description
+          <span style="color:var(--text-lo);font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px">(optional)</span>
+        </label>
+        <textarea class="form-input" id="ns-desc" rows="2" style="resize:vertical;min-height:54px;font-family:'Syne',sans-serif;font-size:12px" placeholder="What does this script do?"></textarea>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal('new-script-modal')">Cancel</button>
+      <button class="btn btn-accent" onclick="createScript()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Script
+      </button>
+    </div>
+  </div>
+
+  <!-- Rename -->
+  <div class="modal sm" id="rename-modal" style="display:none">
+    <div class="modal-hdr">
+      <span class="modal-title">✏️ Rename Script</span>
+      <button class="modal-x" onclick="closeModal('rename-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field"><label class="form-lbl">New Name</label><input class="form-input" id="rename-input" type="text"></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal('rename-modal')">Cancel</button>
+      <button class="btn btn-run" onclick="doRename()">Rename</button>
+    </div>
+  </div>
+
+  <!-- Delete -->
+  <div class="modal sm danger" id="delete-modal" style="display:none">
+    <div class="modal-hdr">
+      <span class="modal-title">🗑️ Delete Script</span>
+      <button class="modal-x" onclick="closeModal('delete-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-hi)">Delete <strong id="delete-name-lbl" style="color:var(--red)"></strong>?</p>
+      <div class="warn-box">⚠️ This permanently deletes the folder and all its contents. This cannot be undone.</div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal('delete-modal')">Cancel</button>
+      <button class="btn btn-stop" onclick="doDelete()">Delete Permanently</button>
+    </div>
+  </div>
+
+</div><!-- /modal-overlay -->
+
+<!-- Toast -->
 <div id="toast">
   <svg id="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
   <span id="toast-msg"></span>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════
-     SCRIPT
-════════════════════════════════════════════════════════════════════════════ -->
 <script>
-// ─── STATE ─────────────────────────────────────────────────────────────────
-let allScripts    = [];
-let currentScript = null;
-let currentTab    = 'logs';
-let logLines      = [];
-let isRunning     = false;
-let panelOpen     = true;
-let profile       = JSON.parse(localStorage.getItem('sm_profile') || '{"name":"User","role":"Developer"}');
-let currentTheme  = localStorage.getItem('sm_theme') || 'dark';
+'use strict';
 
-// ─── INIT ──────────────────────────────────────────────────────────────────
+// ── STATE ──────────────────────────────────────────────────────────────────
+let allScripts   = [];
+let currentScript = null;
+let currentTab   = 'logs';
+let logLines     = [];
+let isRunning    = false;
+let panelOpen    = true;
+let currentRunId = null;
+let rawCode      = '';
+let nsPickedPy   = null;
+let nsPickedMd   = null;
+let metaOpen     = localStorage.getItem('meta_open') !== 'false';
+let profile      = JSON.parse(localStorage.getItem('sm_profile') || '{"name":"User","role":""}');
+let theme        = localStorage.getItem('sm_theme') || 'dark';
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
 async function init() {
-  applyTheme(currentTheme, false);
+  applyTheme(theme, false);
   applyProfile();
+  if (metaOpen) document.getElementById('meta-sidebar').classList.add('open');
   await reloadScripts();
   loadScriptsPath();
-
-  window.api.onScriptLog(data         => appendLog(data));
-  window.api.onScriptDone(data        => onScriptDone(data));
-  window.api.onScriptInputPrompt(data => onInputPrompt(data));
+  window.api.onScriptLog(d => appendLog(d));
+  window.api.onScriptDone(d => onDone(d));
+  window.api.onScriptInputPrompt(d => showStdin(d.prompt));
 }
 
-async function loadScriptsPath() {
-  const p = await window.api.getScriptsPath();
-  const el = document.getElementById('scripts-path-input');
-  if (el) el.value = p;
+// ── THEME ──────────────────────────────────────────────────────────────────
+function applyTheme(t, save=true) {
+  theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  if (save) localStorage.setItem('sm_theme', t);
+  const dark = t === 'dark';
+  const pip = document.getElementById('theme-pip');
+  if (pip) pip.textContent = dark ? '🌙' : '☀️';
+  document.getElementById('sw-dark')?.classList.toggle('active', dark);
+  document.getElementById('sw-light')?.classList.toggle('active', !dark);
+  const lbl = document.getElementById('theme-name-lbl');
+  if (lbl) lbl.textContent = dark ? 'Dark Mode' : 'Light Mode';
+  const ico = document.getElementById('theme-icon');
+  if (ico) ico.innerHTML = dark
+    ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+    : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
 }
+function toggleTheme() { applyTheme(theme === 'dark' ? 'light' : 'dark'); }
+function setTheme(t) { applyTheme(t); }
 
-// ─── THEME ─────────────────────────────────────────────────────────────────
-function applyTheme(theme, save = true) {
-  currentTheme = theme;
-  document.documentElement.setAttribute('data-theme', theme);
-  if (save) localStorage.setItem('sm_theme', theme);
-
-  const thumb = document.getElementById('theme-thumb');
-  const themeIcon = document.getElementById('theme-icon');
-
-  if (theme === 'dark') {
-    if (thumb) thumb.textContent = '🌙';
-    if (themeIcon) themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-    document.getElementById('swatch-dark')?.classList.add('active');
-    document.getElementById('swatch-light')?.classList.remove('active');
-    document.getElementById('theme-name-label').textContent = 'Dark Mode';
-  } else {
-    if (thumb) thumb.textContent = '☀️';
-    if (themeIcon) themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-    document.getElementById('swatch-dark')?.classList.remove('active');
-    document.getElementById('swatch-light')?.classList.add('active');
-    document.getElementById('theme-name-label').textContent = 'Light Mode';
-  }
-}
-
-function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
-function setTheme(t)    { applyTheme(t); }
-
-// ─── SCRIPTS ───────────────────────────────────────────────────────────────
+// ── SCRIPTS LIST ───────────────────────────────────────────────────────────
 async function reloadScripts() {
-  document.getElementById('scripts-list').innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Loading…</span></div>`;
+  document.getElementById('scripts-list').innerHTML =
+    '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Loading…</span></div>';
   let res;
-  try {
-    res = await window.api.loadScripts();
-  } catch(e) {
-    document.getElementById('scripts-list').innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/><circle cx="12" cy="12" r="10"/></svg><span style="color:var(--red)">IPC Error<br>${e.message}</span></div>`;
-    return;
-  }
-  if (!res.success && res.error) {
-    document.getElementById('scripts-list').innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/><circle cx="12" cy="12" r="10"/></svg><span style="color:var(--red);font-size:11px">${res.error}</span></div>`;
-    return;
-  }
+  try { res = await window.api.loadScripts(); }
+  catch(e) { setListErr('IPC Error: ' + e.message); return; }
+  if (!res.success && res.error) { setListErr(res.error); return; }
   allScripts = res.scripts || [];
-  renderScripts(allScripts);
+  renderList(allScripts);
 }
 
-function renderScripts(scripts) {
-  const list = document.getElementById('scripts-list');
+function setListErr(msg) {
+  document.getElementById('scripts-list').innerHTML =
+    `<div class="empty-state"><span style="color:var(--red);font-size:11px">${esc(msg)}</span></div>`;
+}
+
+function renderList(scripts) {
+  const el = document.getElementById('scripts-list');
   if (!scripts.length) {
-    list.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>No scripts found in<br><code style="font-size:10px">scripts/</code> folder</span></div>`;
+    el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>No scripts found.<br>Add scripts via Settings.</span></div>';
     return;
   }
-  list.innerHTML = scripts.map(s => `
-    <div class="script-item ${currentScript?.id===s.id?'active':''}" id="si-${s.id}" onclick="selectScript(${s.id})">
+  el.innerHTML = scripts.map(s => `
+    <div class="script-item${currentScript?.id===s.id?' active':''}" id="si-${s.id}" onclick="selectScript(${s.id})">
       <div class="script-dot"></div>
-      <div style="flex:1;overflow:hidden;min-width:0">
-        <div class="script-name ${!s.hasScript?'no-file':''}">${s.name}</div>
-        ${s.scriptFile ? `<div style="font-size:10px;color:var(--text-lo);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">${s.scriptFile}</div>` : `<div style="font-size:10px;color:var(--red);margin-top:1px">no .py found</div>`}
+      <div class="script-info">
+        <div class="script-name">${esc(s.name)}</div>
+        <div class="script-sub">${s.scriptFile ? esc(s.scriptFile) : '<span style="color:var(--red)">no .py file</span>'}</div>
       </div>
-      ${s.inputConfig?.length ? `<span class="script-input-badge">INPUTS</span>` : ''}
+      ${s.inputConfig?.length ? '<span class="script-input-badge">INPUTS</span>' : ''}
       <div class="script-actions">
         <button class="sa-btn info" title="README" onclick="event.stopPropagation();selectScript(${s.id});setTab('readme')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         </button>
-        <button class="sa-btn play" title="Run" onclick="event.stopPropagation();selectAndRun(${s.id})" ${!s.hasScript?'disabled':''}>
+        <button class="sa-btn play" title="Run" onclick="event.stopPropagation();quickRun(${s.id})"${!s.hasScript?' disabled':''}>
           <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </button>
       </div>
@@ -1023,418 +854,681 @@ function renderScripts(scripts) {
 
 function filterScripts(q) {
   const lq = q.toLowerCase().trim();
-  renderScripts(lq ? allScripts.filter(s => s.name.toLowerCase().includes(lq)) : allScripts);
+  renderList(lq ? allScripts.filter(s => s.name.toLowerCase().includes(lq)) : allScripts);
 }
 
-// ─── SELECT ─────────────────────────────────────────────────────────────────
+// ── SELECT SCRIPT ──────────────────────────────────────────────────────────
 async function selectScript(id) {
   currentScript = allScripts.find(s => s.id === id);
   if (!currentScript) return;
-
-  document.querySelectorAll('.script-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.script-item').forEach(e => e.classList.remove('active'));
   document.getElementById(`si-${id}`)?.classList.add('active');
-  document.getElementById('bc-script').textContent = currentScript.name;
-  document.getElementById('welcome-panel').style.display = 'none';
+  document.getElementById('bc-name').textContent = currentScript.name;
   document.getElementById('btn-run').disabled = !currentScript.hasScript || isRunning;
-
-  // Show input sidebar if script has inputs
   updateInputSidebar();
-
-  if (currentTab === 'readme') await loadReadme();
-  else showLogsPanel();
+  await updateMeta(currentScript);
+  if (currentTab === 'readme') { showPanel('readme'); await loadReadme(); }
+  else if (currentTab === 'code') { showPanel('code'); await loadCode(); }
+  else showPanel('logs');
 }
 
-async function selectAndRun(id) {
+async function quickRun(id) {
   await selectScript(id);
   setTab('logs');
-  // If has inputs open sidebar first and let user click Run with Inputs
-  if (currentScript?.inputConfig?.length) {
-    openInputSidebar();
-    toast('Fill in the inputs then click "Run with Inputs"', 'success');
-  } else {
-    await runCurrentScript();
-  }
+  if (currentScript?.inputConfig?.length) { openInputSidebar(); toast('Fill inputs then click Run with Inputs'); }
+  else await runScript();
 }
 
-// ─── INPUT SIDEBAR ──────────────────────────────────────────────────────────
-function updateInputSidebar() {
-  if (!currentScript) return;
-  document.getElementById('input-sidebar-script-name').textContent = currentScript.name;
-
-  const body = document.getElementById('input-sidebar-body');
-  const config = currentScript.inputConfig || [];
-
-  if (!config.length) {
-    body.innerHTML = `
-      <div class="no-inputs-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <div><strong style="color:var(--text-mid);font-size:12px">No inputs defined</strong></div>
-        <div>Add an <code style="font-size:10px;background:var(--bg-card);padding:1px 4px;border-radius:3px">inputs.json</code> to this script's folder to define input fields.</div>
-      </div>`;
-    document.getElementById('run-inputs-btn').style.opacity = '0.45';
-    document.getElementById('run-inputs-btn').style.pointerEvents = 'none';
-    return;
-  }
-
-  document.getElementById('run-inputs-btn').style.opacity = '';
-  document.getElementById('run-inputs-btn').style.pointerEvents = '';
-
-  body.innerHTML = config.map((field, i) => {
-    const fid = `field-${i}`;
-    const req  = field.required ? `<span class="input-required">*</span>` : '';
-    const desc = field.description ? `<div class="input-desc">${escHtml(field.description)}</div>` : '';
-
-    let input = '';
-    if (field.type === 'select' && field.options) {
-      const opts = field.options.map(o => `<option value="${escHtml(o)}" ${o===field.default?'selected':''}>${escHtml(o)}</option>`).join('');
-      input = `<select class="field-select" id="${fid}">${opts}</select>`;
-    } else if (field.type === 'checkbox' || field.type === 'boolean') {
-      const chk = field.default ? 'checked' : '';
-      input = `<label class="field-checkbox-wrap"><input type="checkbox" class="field-checkbox" id="${fid}" ${chk}><span style="font-size:12px;color:var(--text-hi)">${escHtml(field.label||field.name)}</span></label>`;
-    } else if (field.type === 'textarea') {
-      input = `<textarea class="field-textarea" id="${fid}" placeholder="${escHtml(field.placeholder||'')}">${escHtml(field.default||'')}</textarea>`;
-    } else {
-      const t    = field.type === 'number' ? 'number' : (field.type === 'password' ? 'password' : 'text');
-      const val  = field.default !== undefined ? `value="${escHtml(String(field.default))}"` : '';
-      const ph   = field.placeholder ? `placeholder="${escHtml(field.placeholder)}"` : '';
-      input = `<input type="${t}" class="field-input" id="${fid}" ${val} ${ph}>`;
-    }
-
-    return `
-      <div class="input-group">
-        <label class="input-label" for="${fid}">${escHtml(field.label||field.name)} ${req}</label>
-        ${desc}
-        ${input}
-      </div>`;
-  }).join('');
-}
-
-function openInputSidebar() {
-  document.getElementById('input-sidebar').classList.add('open');
-}
-
-function closeInputSidebar() {
-  document.getElementById('input-sidebar').classList.remove('open');
-}
-
-// Collect values from input sidebar fields
-function collectInputValues() {
-  if (!currentScript) return { args: [], stdinData: null };
-  const config = currentScript.inputConfig || [];
-  if (!config.length) return { args: [], stdinData: null };
-
-  const args      = [];
-  const stdinParts = [];
-
-  config.forEach((field, i) => {
-    const fid = `field-${i}`;
-    const el  = document.getElementById(fid);
+// ── PANELS ─────────────────────────────────────────────────────────────────
+function showPanel(name) {
+  const panels = { welcome:'welcome-panel', logs:'logs-panel', readme:'readme-panel', code:'code-panel' };
+  Object.entries(panels).forEach(([k, id]) => {
+    const el = document.getElementById(id);
     if (!el) return;
-
-    let value = '';
-    if (field.type === 'checkbox' || field.type === 'boolean') {
-      value = el.checked ? 'true' : 'false';
-    } else {
-      value = el.value.trim();
-    }
-
-    // Log what inputs were provided
-    appendLog({ type: 'system', text: `   ${field.name}: ${value}` });
-
-    if (field.passAs === 'arg') {
-      if (field.flag) args.push(field.flag, value);
-      else args.push(value);
-    } else {
-      // Default: pass as stdin line
-      stdinParts.push(value);
-    }
+    el.style.display = k === name ? 'flex' : 'none';
+    if (k === name && k !== 'welcome') el.style.flexDirection = 'column';
+    if (k === name && k === 'welcome') el.style.flexDirection = 'column';
   });
-
-  return {
-    args,
-    stdinLines: stdinParts
-  };
 }
 
-// ─── RUN / STOP ─────────────────────────────────────────────────────────────
-let currentRunId = null;
-
-async function runCurrentScript() {
-  if (!currentScript?.hasScript || isRunning) return;
-  setRunning(true);
-  clearLogs(false);
-  setTab('logs');
-  hideStdinBar();
-  const res = await window.api.runScript({
-    scriptPath: currentScript.scriptPath, args: [], stdinLines: []
-  });
-  currentRunId = res.runId;
-}
-
-async function runWithInputs() {
-  if (!currentScript?.hasScript || isRunning) return;
-  setRunning(true);
-  clearLogs(false);
-  setTab('logs');
-  hideStdinBar();
-  const { args, stdinLines } = collectInputValues();
-  const res = await window.api.runScript({
-    scriptPath: currentScript.scriptPath, args, stdinLines
-  });
-  currentRunId = res.runId;
-}
-
-async function stopCurrentScript() {
-  if (currentRunId === null) return;
-  await window.api.stopScript({ runId: currentRunId });
-  hideStdinBar();
-}
-
-function onScriptDone({ code, runId }) {
-  if (runId !== currentRunId) return;
-  currentRunId = null;
-  hideStdinBar();
-  setRunning(false);
-  if (code !== 0 && code !== -1) {
-    document.getElementById('status-badge').className = 'status-badge error';
-    document.getElementById('status-text').textContent = 'Error';
-  }
-}
-
-// ── STDIN LIVE INPUT ──────────────────────────────────────────────────────
-function onInputPrompt({ runId, prompt }) {
-  if (runId !== currentRunId) return;
-  showStdinBar(prompt);
-}
-
-function showStdinBar(promptText) {
-  const bar = document.getElementById('stdin-bar');
-  const inp = document.getElementById('stdin-input');
-  const lbl = document.getElementById('stdin-prompt-text');
-  if (lbl) lbl.textContent = promptText || 'Waiting for input…';
-  bar.classList.add('visible');
-  setTimeout(() => inp && inp.focus(), 50);
-}
-
-function hideStdinBar() {
-  const bar = document.getElementById('stdin-bar');
-  const inp = document.getElementById('stdin-input');
-  bar.classList.remove('visible');
-  if (inp) inp.value = '';
-}
-
-async function sendStdinLine() {
-  if (currentRunId === null) return;
-  const inp   = document.getElementById('stdin-input');
-  const line  = inp ? inp.value : '';
-  // Keep bar open — script might ask for more inputs
-  if (inp) inp.value = '';
-  hideStdinBar();
-  await window.api.sendStdin({ runId: currentRunId, line });
-}
-
-function setRunning(running) {
-  isRunning = running;
-  const btnRun  = document.getElementById('btn-run');
-  const btnStop = document.getElementById('btn-stop');
-  const badge   = document.getElementById('status-badge');
-  const btext   = document.getElementById('status-text');
-  const ribBtn  = document.getElementById('run-inputs-btn');
-
-  if (running) {
-    btnRun.style.display  = 'none';
-    btnStop.style.display = '';
-    badge.className = 'status-badge running';
-    btext.textContent = 'Running';
-    if (ribBtn) { ribBtn.style.opacity='0.45'; ribBtn.style.pointerEvents='none'; }
-    currentScript && document.getElementById(`si-${currentScript.id}`)?.classList.add('running');
-  } else {
-    btnRun.style.display  = '';
-    btnStop.style.display = 'none';
-    btnRun.disabled = !currentScript?.hasScript;
-    badge.className = 'status-badge idle';
-    btext.textContent = 'Idle';
-    if (ribBtn) { ribBtn.style.opacity=''; ribBtn.style.pointerEvents=''; }
-    currentScript && document.getElementById(`si-${currentScript.id}`)?.classList.remove('running');
-  }
-}
-
-// ─── TABS ───────────────────────────────────────────────────────────────────
+// ── TABS ───────────────────────────────────────────────────────────────────
 function setTab(tab) {
   currentTab = tab;
-  document.getElementById('tab-logs').classList.toggle('active', tab === 'logs');
-  document.getElementById('tab-readme').classList.toggle('active', tab === 'readme');
-  if (tab === 'logs') showLogsPanel();
-  else { showReadmePanel(); loadReadme(); }
-}
-
-function showLogsPanel() {
-  document.getElementById('welcome-panel').style.display = 'none';
-  document.getElementById('logs-panel').style.display   = 'flex';
-  document.getElementById('readme-panel').style.display = 'none';
-}
-
-function showReadmePanel() {
-  document.getElementById('welcome-panel').style.display = 'none';
-  document.getElementById('logs-panel').style.display   = 'none';
-  document.getElementById('readme-panel').style.display = 'flex';
+  ['logs','readme','code'].forEach(t =>
+    document.getElementById('tab-'+t)?.classList.toggle('active', t === tab)
+  );
+  const isLogs = tab === 'logs';
+  ['btn-save','btn-clear'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isLogs ? '' : 'none';
+  });
+  if (!currentScript) { showPanel('welcome'); return; }
+  if (tab === 'logs') showPanel('logs');
+  else if (tab === 'readme') { showPanel('readme'); loadReadme(); }
+  else if (tab === 'code') { showPanel('code'); loadCode(); }
 }
 
 async function loadReadme() {
   const out = document.getElementById('readme-output');
   if (!currentScript) return;
   if (!currentScript.hasReadme) {
-    out.innerHTML = `<div class="readme-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>No README.md found for <strong>${currentScript.name}</strong></p></div>`;
+    out.innerHTML = `<div class="readme-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>No README.md for <strong>${esc(currentScript.name)}</strong></p></div>`;
     return;
   }
-  out.innerHTML = `<div class="readme-empty"><p>Loading…</p></div>`;
+  out.innerHTML = '<div class="readme-empty"><p>Loading…</p></div>';
   const res = await window.api.readReadme(currentScript.readmePath);
-  out.innerHTML = renderMarkdown(res.content);
+  out.innerHTML = mdToHtml(res.content || '');
 }
 
-// ─── MARKDOWN RENDERER ──────────────────────────────────────────────────────
-function renderMarkdown(md) {
-  let h = md
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/```[\w]*\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
-    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/^---$/gm,'<hr>')
-    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
-    .replace(/^\- (.+)$/gm,'<li>$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm,'<li>$2</li>')
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/\n/g,'<br>');
-  h = h.replace(/(<li>.*?<\/li>(\s*<br>)*)+/gs, m => `<ul>${m.replace(/<br>/g,'')}</ul>`);
+function copyCode() {
+  if (!rawCode) return;
+  navigator.clipboard.writeText(rawCode).then(() => {
+    toast('Code copied!');
+    const btn = document.getElementById('btn-copy');
+    if (!btn) return;
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => btn.innerHTML = orig, 1800);
+  });
+}
+
+async function loadCode() {
+  const out = document.getElementById('code-output');
+  const fnEl = document.getElementById('code-fn');
+  rawCode = '';
+  if (!currentScript?.hasScript) {
+    out.innerHTML = `<div class="code-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><p>No Python script in <strong>${esc(currentScript?.name||'')}</strong></p></div>`;
+    if (fnEl) fnEl.textContent = '—';
+    return;
+  }
+  if (fnEl) fnEl.textContent = currentScript.scriptFile || 'script.py';
+  out.innerHTML = '<div class="code-empty"><p>Loading…</p></div>';
+  const res = await window.api.readReadme(currentScript.scriptPath);
+  rawCode = res.content || '';
+
+  // Build DOM directly — never inject span HTML as a string
+  const container = document.createElement('div');
+  container.className = 'code-content';
+
+  rawCode.split('\n').forEach((line, i) => {
+    const row = document.createElement('div');
+    row.className = 'code-line';
+
+    const ln = document.createElement('span');
+    ln.className = 'code-ln';
+    ln.textContent = String(i + 1);
+
+    const text = document.createElement('span');
+    text.className = 'code-text';
+    pyHighlightDOM(line, text);
+
+    row.appendChild(ln);
+    row.appendChild(text);
+    container.appendChild(row);
+  });
+
+  out.innerHTML = '';
+  out.appendChild(container);
+}
+
+// Highlight a single line by appending real DOM nodes to `container`
+function pyHighlightDOM(raw, container) {
+  // Token types: [{cls: 'kw'|'str'|'cm'|...|null, text: string}]
+  const tokens = pyTokenize(raw);
+  tokens.forEach(tok => {
+    if (tok.cls) {
+      const span = document.createElement('span');
+      span.className = tok.cls;
+      span.textContent = tok.text;
+      container.appendChild(span);
+    } else {
+      container.appendChild(document.createTextNode(tok.text));
+    }
+  });
+}
+
+// Tokenize a single line of Python into [{cls, text}] segments
+function pyTokenize(raw) {
+  const KW = new Set(['def','class','import','from','return','if','elif','else','for','while',
+    'in','not','and','or','is','None','True','False','try','except','finally','raise',
+    'with','as','pass','break','continue','yield','lambda','global','nonlocal','del',
+    'assert','async','await']);
+  const BI = new Set(['print','len','range','str','int','float','bool','list','dict','set',
+    'tuple','type','isinstance','hasattr','getattr','setattr','open','super','self','cls',
+    'map','filter','zip','enumerate','sorted','reversed','any','all','sum','min','max',
+    'abs','round','input']);
+
+  const tokens = [];
+  let i = 0;
+  const push = (cls, text) => { if (text) tokens.push({ cls, text }); };
+
+  // Full-line comment
+  const trimmed = raw.trimStart();
+  if (trimmed.startsWith('#')) {
+    push('cm', raw);
+    return tokens;
+  }
+
+  while (i < raw.length) {
+    const ch = raw[i];
+
+    // Inline comment (rough — not inside strings)
+    if (ch === '#') {
+      push('cm', raw.slice(i));
+      break;
+    }
+
+    // Triple-quoted string
+    if ((ch === '"' || ch === "'") && raw.slice(i, i+3) === ch.repeat(3)) {
+      const q = ch.repeat(3);
+      let j = i + 3;
+      while (j < raw.length && raw.slice(j, j+3) !== q) j++;
+      j = Math.min(j + 3, raw.length);
+      push('str', raw.slice(i, j));
+      i = j; continue;
+    }
+
+    // Single/double quoted string
+    if (ch === '"' || ch === "'") {
+      let j = i + 1;
+      while (j < raw.length && raw[j] !== ch) {
+        if (raw[j] === '\\') j++;
+        j++;
+      }
+      j = Math.min(j + 1, raw.length);
+      push('str', raw.slice(i, j));
+      i = j; continue;
+    }
+
+    // Decorator
+    if (ch === '@') {
+      let j = i + 1;
+      while (j < raw.length && /\w/.test(raw[j])) j++;
+      push('dc', raw.slice(i, j));
+      i = j; continue;
+    }
+
+    // Number
+    if (/\d/.test(ch) && (i === 0 || !/\w/.test(raw[i-1]))) {
+      let j = i;
+      while (j < raw.length && /[\d.]/.test(raw[j])) j++;
+      push('num', raw.slice(i, j));
+      i = j; continue;
+    }
+
+    // Word (keyword / builtin / identifier)
+    if (/[a-zA-Z_]/.test(ch)) {
+      let j = i;
+      while (j < raw.length && /\w/.test(raw[j])) j++;
+      const word = raw.slice(i, j);
+      // Check if followed by ( → function call
+      const nextNonSpace = raw.slice(j).trimStart();
+      if (KW.has(word)) push('kw', word);
+      else if (BI.has(word)) push('bi', word);
+      else if (nextNonSpace.startsWith('(')) push('fn', word);
+      else push(null, word);
+      i = j; continue;
+    }
+
+    // Operators
+    if (/[+\-*/%=<>!&|^~:,.]/.test(ch)) {
+      push('op', ch);
+      i++; continue;
+    }
+
+    // Everything else
+    push(null, ch);
+    i++;
+  }
+
+  return tokens;
+}
+
+// ── SYNTAX HIGHLIGHTING ────────────────────────────────────────────────────
+function pyHighlight(code) {
+  return code.split('\n').map((line, i) =>
+    `<div class="code-line"><span class="code-ln">${i+1}</span><span class="code-text">${pyLine(line)}</span></div>`
+  ).join('');
+}
+
+function pyLine(raw) {
+  // Escape HTML special chars EXCEPT we'll use a placeholder trick for quotes
+  // to prevent double-escaping of injected span attributes
+  let s = raw
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Comment lines — return early, no span injection needed
+  if (/^\s*#/.test(s)) return `<span class="cm">${s}</span>`;
+
+  // Detect inline comment suffix (only outside strings)
+  let cmSuffix = '';
+  const ci = s.indexOf('#');
+  if (ci > 0) {
+    const before = s.slice(0, ci);
+    const dq = (before.match(/&quot;/g) || []).length + (before.match(/"/g) || []).length;
+    const sq = (before.match(/'/g) || []).length;
+    if (dq % 2 === 0 && sq % 2 === 0) {
+      cmSuffix = `<span class="cm">${s.slice(ci)}</span>`;
+      s = s.slice(0, ci);
+    }
+  }
+
+  // Now inject spans using single-quoted attributes to avoid any " conflicts
+  s = s.replace(/(@\w+)/g, `<span class='dc'>$1</span>`);
+  s = s.replace(/\b(def|class|import|from|return|if|elif|else|for|while|in|not|and|or|is|None|True|False|try|except|finally|raise|with|as|pass|break|continue|yield|lambda|global|nonlocal|del|assert|async|await)\b/g,
+    `<span class='kw'>$1</span>`);
+  s = s.replace(/\b(print|len|range|str|int|float|bool|list|dict|set|tuple|type|isinstance|hasattr|getattr|setattr|open|super|self|cls|map|filter|zip|enumerate|sorted|reversed|any|all|sum|min|max|abs|round|input)\b/g,
+    `<span class='bi'>$1</span>`);
+  s = s.replace(/<span class='kw'>def<\/span>\s+(\w+)/g, `<span class='kw'>def</span> <span class='fn'>$1</span>`);
+  s = s.replace(/<span class='kw'>class<\/span>\s+(\w+)/g, `<span class='kw'>class</span> <span class='cl'>$1</span>`);
+  s = s.replace(/('(?:[^'\\]|\\.)*?')/g, `<span class='str'>$1</span>`);
+  s = s.replace(/\b(\d+\.?\d*)\b/g, `<span class='num'>$1</span>`);
+
+  return s + cmSuffix;
+}
+
+function mdToHtml(md) {
+  let h = md.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```[\w]*\n?([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^---$/gm,'<hr>').replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^[-*] (.+)$/gm,'<li>$1</li>').replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:var(--accent)">$1</a>')
+    .replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
+  h = h.replace(/(<li>.*?<\/li>(<br>)*)+/gs, m => `<ul>${m.replace(/<br>/g,'')}</ul>`);
   return '<p>' + h + '</p>';
 }
 
-// ─── LOGS ───────────────────────────────────────────────────────────────────
+// ── INPUT SIDEBAR ──────────────────────────────────────────────────────────
+function updateInputSidebar() {
+  if (!currentScript) return;
+  document.getElementById('isb-script-name').textContent = currentScript.name;
+  const body   = document.getElementById('input-sidebar-body');
+  const config = currentScript.inputConfig || [];
+  const runBtn = document.getElementById('run-inputs-btn');
+  if (!config.length) {
+    body.innerHTML = `<div class="no-inputs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>No <code style="font-size:10px;background:var(--bg-card);padding:1px 4px;border-radius:3px">inputs.json</code> found</div></div>`;
+    runBtn.style.opacity='0.4'; runBtn.style.pointerEvents='none';
+    return;
+  }
+  runBtn.style.opacity=''; runBtn.style.pointerEvents='';
+  body.innerHTML = config.map((f, i) => {
+    const fid = `fi-${i}`;
+    const req = f.required ? '<span class="input-req">*</span>' : '';
+    const desc = f.description ? `<div class="input-desc">${esc(f.description)}</div>` : '';
+    let inp = '';
+    if (f.type==='select'&&f.options) inp = `<select class="field-select" id="${fid}">${f.options.map(o=>`<option value="${esc(o)}"${o===f.default?' selected':''}>${esc(o)}</option>`).join('')}</select>`;
+    else if (f.type==='checkbox'||f.type==='boolean') inp = `<label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="${fid}"${f.default?' checked':''} style="width:15px;height:15px;accent-color:var(--accent)"><span style="font-size:12px;color:var(--text-hi)">${esc(f.label||f.name)}</span></label>`;
+    else if (f.type==='textarea') inp = `<textarea class="field-textarea" id="${fid}" placeholder="${esc(f.placeholder||'')}">${esc(f.default||'')}</textarea>`;
+    else { const t=f.type==='number'?'number':f.type==='password'?'password':'text'; inp = `<input type="${t}" class="field-input" id="${fid}" value="${esc(f.default!==undefined?String(f.default):'')}" placeholder="${esc(f.placeholder||'')}">`; }
+    return `<div class="input-group"><label class="input-label" for="${fid}">${esc(f.label||f.name)} ${req}</label>${desc}${inp}</div>`;
+  }).join('');
+}
+function openInputSidebar()  { document.getElementById('input-sidebar').classList.add('open'); }
+function closeInputSidebar() { document.getElementById('input-sidebar').classList.remove('open'); }
+
+function collectInputs() {
+  const config = currentScript?.inputConfig || [];
+  const args=[], stdin=[];
+  config.forEach((f, i) => {
+    const el = document.getElementById(`fi-${i}`);
+    if (!el) return;
+    const val = (f.type==='checkbox'||f.type==='boolean') ? (el.checked?'true':'false') : el.value.trim();
+    if (f.passAs==='arg') { if (f.flag) args.push(f.flag, val); else args.push(val); }
+    else stdin.push(val);
+  });
+  return { args, stdinLines: stdin };
+}
+
+// ── RUN / STOP ─────────────────────────────────────────────────────────────
+async function runScript() {
+  if (!currentScript?.hasScript || isRunning) return;
+  setRunning(true); clearLogs(false); setTab('logs'); hideStdinBar();
+  const res = await window.api.runScript({ scriptPath: currentScript.scriptPath, args: [], stdinLines: [] });
+  currentRunId = res.runId;
+}
+async function runWithInputs() {
+  if (!currentScript?.hasScript || isRunning) return;
+  setRunning(true); clearLogs(false); setTab('logs'); hideStdinBar();
+  const { args, stdinLines } = collectInputs();
+  const res = await window.api.runScript({ scriptPath: currentScript.scriptPath, args, stdinLines });
+  currentRunId = res.runId;
+}
+async function stopScript() {
+  if (currentRunId == null) return;
+  await window.api.stopScript({ runId: currentRunId });
+}
+function onDone({ code, runId }) {
+  if (runId !== currentRunId) return;
+  currentRunId = null; hideStdinBar(); setRunning(false);
+  if (code !== 0 && code !== -1) {
+    document.getElementById('status-badge').className = 'status-badge error';
+    document.getElementById('status-text').textContent = 'Error';
+  }
+}
+function showStdin(promptText) {
+  document.getElementById('stdin-prompt-lbl').textContent = promptText || 'Waiting for input…';
+  document.getElementById('stdin-bar').classList.add('visible');
+  setTimeout(() => document.getElementById('stdin-input')?.focus(), 40);
+}
+function hideStdinBar() {
+  document.getElementById('stdin-bar').classList.remove('visible');
+  const i = document.getElementById('stdin-input'); if (i) i.value = '';
+}
+async function sendStdin() {
+  if (currentRunId == null) return;
+  const inp = document.getElementById('stdin-input');
+  const line = inp ? inp.value : '';
+  if (inp) inp.value = '';
+  hideStdinBar();
+  await window.api.sendStdin({ runId: currentRunId, line });
+}
+function setRunning(r) {
+  isRunning = r;
+  const runBtn=document.getElementById('btn-run'), stopBtn=document.getElementById('btn-stop');
+  const badge=document.getElementById('status-badge'), txt=document.getElementById('status-text');
+  const ribtn=document.getElementById('run-inputs-btn');
+  if (r) {
+    runBtn.style.display='none'; stopBtn.style.display='';
+    badge.className='status-badge running'; txt.textContent='Running';
+    if (ribtn){ribtn.style.opacity='0.4';ribtn.style.pointerEvents='none';}
+    currentScript && document.getElementById(`si-${currentScript.id}`)?.classList.add('running');
+  } else {
+    runBtn.style.display=''; stopBtn.style.display='none';
+    runBtn.disabled=!currentScript?.hasScript;
+    badge.className='status-badge idle'; txt.textContent='Idle';
+    if (ribtn){ribtn.style.opacity='';ribtn.style.pointerEvents='';}
+    currentScript && document.getElementById(`si-${currentScript.id}`)?.classList.remove('running');
+  }
+}
+
+// ── LOGS ───────────────────────────────────────────────────────────────────
 function appendLog(data) {
   const out = document.getElementById('log-output');
   out.querySelector('.log-empty')?.remove();
-
-  const ts = new Date().toLocaleTimeString('en-GB', { hour12: false });
+  const ts = new Date().toLocaleTimeString('en-GB',{hour12:false});
   logLines.push(`[${ts}] ${data.text}`);
-
-  const div = document.createElement('div');
-  div.className = `log-line log-${data.type}`;
-  div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-text">${escHtml(data.text)}</span>`;
-  out.appendChild(div);
+  const d = document.createElement('div');
+  d.className = `log-line log-${data.type}`;
+  d.innerHTML = `<span class="log-ts">${ts}</span><span class="log-text">${esc(data.text)}</span>`;
+  out.appendChild(d);
   out.scrollTop = out.scrollHeight;
-
   document.getElementById('log-count').textContent = `${logLines.length} line${logLines.length!==1?'s':''}`;
-  document.getElementById('btn-save').disabled  = false;
+  document.getElementById('btn-save').disabled = false;
   document.getElementById('btn-clear').disabled = false;
 }
-
-function clearLogs(showToast = true) {
+function clearLogs(notify=true) {
   logLines = [];
-  document.getElementById('log-output').innerHTML = `<div class="log-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><p>Run the script to see output here</p></div>`;
+  document.getElementById('log-output').innerHTML =
+    '<div class="log-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><p>Run the script to see output here</p></div>';
   document.getElementById('log-count').textContent = '0 lines';
-  document.getElementById('btn-save').disabled  = true;
+  document.getElementById('btn-save').disabled = true;
   document.getElementById('btn-clear').disabled = true;
-  if (showToast) toast('Logs cleared', 'success');
+  if (notify) toast('Logs cleared');
 }
-
 async function saveLogs() {
   if (!logLines.length || !currentScript) return;
   const res = await window.api.saveLogs({ scriptName: currentScript.name, logs: logLines });
-  if (res.success) toast(`Saved to ${res.filePath}`, 'success');
+  if (res.success) toast(`Saved to ${res.filePath}`);
   else if (res.error) toast(res.error, 'error');
 }
 
-// ─── PANEL ──────────────────────────────────────────────────────────────────
+// ── PANEL COLLAPSE ─────────────────────────────────────────────────────────
 function collapsePanel() {
   panelOpen = false;
   document.getElementById('panel-sidebar').classList.add('collapsed');
   document.getElementById('expand-btn').style.display = '';
   document.querySelectorAll('#icon-sidebar .icon-btn').forEach(b => b.classList.remove('active'));
 }
-
 function expandPanel() {
   panelOpen = true;
   document.getElementById('panel-sidebar').classList.remove('collapsed');
   document.getElementById('expand-btn').style.display = 'none';
-  document.getElementById('iBtn-scripts').classList.add('active');
+  document.getElementById('ib-scripts')?.classList.add('active');
 }
-
 function openPanel(type) {
   if (!panelOpen) expandPanel();
   document.getElementById('panel-title').textContent = type === 'scripts' ? 'Scripts' : 'Search';
-  document.getElementById('search-input').placeholder = type === 'scripts' ? 'Filter scripts…' : 'Search everything…';
 }
-
 function setActiveIcon(btn) {
   document.querySelectorAll('#icon-sidebar .icon-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-// ─── MODALS ─────────────────────────────────────────────────────────────────
-function openSettings() {
+// ── METADATA SIDEBAR ───────────────────────────────────────────────────────
+function toggleMeta() {
+  metaOpen = !metaOpen;
+  localStorage.setItem('meta_open', metaOpen);
+  document.getElementById('meta-sidebar').classList.toggle('open', metaOpen);
+}
+async function updateMeta(script) {
+  const emEl = document.getElementById('meta-empty');
+  const dtEl = document.getElementById('meta-details');
+  const rBtn = document.getElementById('rename-btn');
+  const dBtn = document.getElementById('delete-btn');
+  const fBtn = document.getElementById('folder-btn');
+  if (!script) {
+    emEl.style.display='flex'; dtEl.style.display='none';
+    rBtn.disabled=dBtn.disabled=fBtn.disabled=true;
+    document.getElementById('msb-name').textContent='—'; return;
+  }
+  emEl.style.display='none'; dtEl.style.display='flex';
+  rBtn.disabled=dBtn.disabled=fBtn.disabled=false;
+  document.getElementById('msb-name').textContent=script.name;
+  document.getElementById('meta-name').textContent=script.name;
+  document.getElementById('meta-created').textContent=script.createdOn||'Unknown';
+  const badges=[];
+  if (script.hasScript) badges.push('<span class="badge py">🐍 Python</span>');
+  if (script.hasReadme) badges.push('<span class="badge md">📖 README</span>');
+  if (script.inputConfig?.length) badges.push('<span class="badge cfg">⚙️ Config</span>');
+  document.getElementById('script-badges').innerHTML=badges.join('');
+  if (script.inputConfig?.length) {
+    document.getElementById('cfg-card').style.display='block';
+    document.getElementById('cfg-preview').textContent=JSON.stringify(script.inputConfig,null,2);
+  } else document.getElementById('cfg-card').style.display='none';
+  try {
+    const stats = await window.api.getScriptStats(script.folder);
+    if (stats.success) {
+      document.getElementById('meta-modified').textContent=stats.modified||'—';
+      document.getElementById('meta-size').textContent=stats.totalSize||'0 B';
+      document.getElementById('file-count').textContent=`${stats.files.length} file${stats.files.length!==1?'s':''}`;
+      document.getElementById('file-list').innerHTML=stats.files.map(f=>`
+        <li><span style="flex-shrink:0">${f.isDirectory?'📁':fileIcon(f.name)}</span><span class="file-nm ${fileClass(f.name)}">${esc(f.name)}</span><span class="file-sz">${f.size}</span></li>`).join('');
+    }
+  } catch(e) { document.getElementById('meta-modified').textContent='—'; }
+}
+function fileIcon(n) {
+  if (n.endsWith('.py')) return '🐍';
+  if (/^readme\.(md|txt)$/i.test(n)) return '📖';
+  if (n==='inputs.json') return '⚙️';
+  return '📄';
+}
+function fileClass(n) {
+  if (n.endsWith('.py')) return 'f-py';
+  if (/^readme\.(md|txt)$/i.test(n)) return 'f-md';
+  if (n==='inputs.json') return 'f-cfg';
+  return '';
+}
+
+// ── MODALS ─────────────────────────────────────────────────────────────────
+function openModal(id) {
+  document.querySelectorAll('.modal').forEach(m => m.style.display='none');
   document.getElementById('modal-overlay').classList.add('open');
-  document.getElementById('settings-modal').style.display = '';
-  document.getElementById('profile-modal').style.display  = 'none';
+  document.getElementById(id).style.display='';
 }
-function closeSettings() { document.getElementById('modal-overlay').classList.remove('open'); document.getElementById('settings-modal').style.display='none'; }
-
-async function browsePath() {
-  const p = await window.api.openFolder();
-  if (p) document.getElementById('scripts-path-input').value = p;
+function closeModal(id) {
+  document.getElementById(id).style.display='none';
+  const any = Array.from(document.querySelectorAll('.modal')).some(m => m.style.display!=='none');
+  if (!any) document.getElementById('modal-overlay').classList.remove('open');
 }
-function saveSettings() { toast('Settings saved', 'success'); closeSettings(); }
+function overlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    document.querySelectorAll('.modal').forEach(m => m.style.display='none');
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
 
+// ── SETTINGS ───────────────────────────────────────────────────────────────
+async function loadScriptsPath() {
+  try {
+    const p = await window.api.getScriptsPath();
+    const el = document.getElementById('scripts-path-input'); if (el) el.value=p;
+    const bp = document.getElementById('ns-base-path'); if (bp) bp.textContent=p;
+  } catch(e) {}
+}
+function openSettings() { loadScriptsPath(); openModal('settings-modal'); }
+async function browseScriptsPath() {
+  const p = await window.api.openFolderDialog();
+  if (p) document.getElementById('scripts-path-input').value=p;
+}
+function saveSettings() { toast('Settings saved'); closeModal('settings-modal'); }
+
+// ── PROFILE ─────────────────────────────────────────────────────────────────
 function openProfile() {
-  document.getElementById('profile-name-input').value = profile.name;
-  document.getElementById('profile-role-input').value = profile.role;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.getElementById('settings-modal').style.display = 'none';
-  document.getElementById('profile-modal').style.display  = '';
+  document.getElementById('profile-name').value=profile.name;
+  document.getElementById('profile-role').value=profile.role;
+  openModal('profile-modal');
 }
-function closeProfile() { document.getElementById('modal-overlay').classList.remove('open'); document.getElementById('profile-modal').style.display='none'; }
-
 function saveProfile() {
-  profile.name = document.getElementById('profile-name-input').value || 'User';
-  profile.role = document.getElementById('profile-role-input').value || '';
-  localStorage.setItem('sm_profile', JSON.stringify(profile));
-  applyProfile();
-  toast('Profile saved', 'success');
-  closeProfile();
+  profile.name=document.getElementById('profile-name').value||'User';
+  profile.role=document.getElementById('profile-role').value||'';
+  localStorage.setItem('sm_profile',JSON.stringify(profile));
+  applyProfile(); toast('Profile saved'); closeModal('profile-modal');
 }
-
 function applyProfile() {
-  const initials = profile.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('profile-avatar').textContent = initials;
-  document.getElementById('profile-name-btn').textContent = profile.name || 'Manage Profile';
+  const initials=profile.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'U';
+  const av=document.getElementById('profile-avatar'); if (av) av.textContent=initials;
+  const nb=document.getElementById('profile-btn-name'); if (nb) nb.textContent=profile.name||'Profile';
 }
 
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) { closeSettings(); closeProfile(); }
+// ── NEW SCRIPT MODAL ───────────────────────────────────────────────────────
+function syncFolder(val) {
+  const el=document.getElementById('ns-folder'); if (el) el.value=val.trim().replace(/\s+/g,'_');
+}
+function onPySelected(inp) {
+  nsPickedPy=inp.files[0]||null;
+  const lbl=document.getElementById('ns-py-lbl');
+  if (nsPickedPy) {
+    lbl.textContent=nsPickedPy.name; lbl.classList.add('has');
+    const n=document.getElementById('ns-name');
+    if (n&&!n.value.trim()) { const base=nsPickedPy.name.replace(/\.py$/i,''); n.value=base; syncFolder(base); }
+  } else { lbl.textContent='No file selected'; lbl.classList.remove('has'); }
+}
+function onMdSelected(inp) {
+  nsPickedMd=inp.files[0]||null;
+  const lbl=document.getElementById('ns-md-lbl');
+  if (nsPickedMd) { lbl.textContent=nsPickedMd.name; lbl.classList.add('has'); }
+  else { lbl.textContent='No file selected'; lbl.classList.remove('has'); }
+}
+function openNewScriptModal() {
+  nsPickedPy=null; nsPickedMd=null;
+  ['ns-name','ns-folder','ns-desc'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['ns-py-lbl','ns-md-lbl'].forEach(id => { const el=document.getElementById(id); if(el){el.textContent='No file selected';el.classList.remove('has');} });
+  ['ns-py-input','ns-md-input'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  loadScriptsPath();
+  openModal('new-script-modal');
+  setTimeout(()=>document.getElementById('ns-name')?.focus(),80);
+}
+async function createScript() {
+  const name  =document.getElementById('ns-name').value.trim();
+  const folder=document.getElementById('ns-folder').value.trim()||name;
+  const desc  =document.getElementById('ns-desc').value.trim();
+  if (!name)       { toast('Please enter a script name','error'); return; }
+  if (!nsPickedPy) { toast('Please select a .py script file','error'); return; }
+  closeModal('new-script-modal');
+  try {
+    const pyContent=await readFileText(nsPickedPy);
+    const mdContent=nsPickedMd ? await readFileText(nsPickedMd) : (desc?`# ${name}\n\n${desc}\n`:null);
+    const res=await window.api.createScript({
+      name:folder, description:desc, template:'empty',
+      pyContent, pyFileName:nsPickedPy.name,
+      readmeContent:mdContent, readmeFileName:nsPickedMd?nsPickedMd.name:(mdContent?'README.md':null)
+    });
+    if (res.success) {
+      toast(`Script "${name}" created!`);
+      await reloadScripts();
+      const ns=allScripts.find(s=>s.name===folder);
+      if (ns) await selectScript(ns.id);
+    } else toast(res.error||'Failed to create script','error');
+  } catch(e) { toast(e.message,'error'); }
+}
+function readFileText(file) {
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result);
+    r.onerror=()=>rej(new Error('Failed to read file'));
+    r.readAsText(file);
+  });
 }
 
-// ─── TOAST ──────────────────────────────────────────────────────────────────
+// ── RENAME ─────────────────────────────────────────────────────────────────
+function openRenameModal() {
+  if (!currentScript) return;
+  document.getElementById('rename-input').value=currentScript.name;
+  openModal('rename-modal');
+}
+async function doRename() {
+  const newName=document.getElementById('rename-input').value.trim();
+  if (!newName||!currentScript) { toast('Enter a name','error'); return; }
+  if (newName===currentScript.name) { closeModal('rename-modal'); return; }
+  closeModal('rename-modal');
+  const res=await window.api.renameScript(currentScript.folder, newName);
+  if (res.success) {
+    toast(`Renamed to "${newName}"`);
+    await reloadScripts();
+    const ns=allScripts.find(s=>s.name===newName);
+    if (ns) await selectScript(ns.id);
+  } else toast(res.error||'Rename failed','error');
+}
+
+// ── DELETE ─────────────────────────────────────────────────────────────────
+function openDeleteModal() {
+  if (!currentScript) return;
+  document.getElementById('delete-name-lbl').textContent=currentScript.name;
+  openModal('delete-modal');
+}
+async function doDelete() {
+  if (!currentScript) return;
+  const name=currentScript.name, folder=currentScript.folder;
+  closeModal('delete-modal');
+  const res=await window.api.deleteScript(currentScript.id, folder);
+  if (res.success) {
+    currentScript=null;
+    document.getElementById('bc-name').textContent='—';
+    showPanel('welcome');
+    document.getElementById('btn-run').disabled=true;
+    await reloadScripts();
+    await updateMeta(null);
+    toast(`"${name}" deleted`);
+  } else toast(res.error||'Delete failed','error');
+}
+
+// ── OPEN FOLDER ────────────────────────────────────────────────────────────
+async function openFolder() {
+  if (!currentScript) return;
+  try { await window.api.openFolder(currentScript.folder); } catch(e) { toast(e.message,'error'); }
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
 let toastTimer;
-function toast(msg, type = 'success') {
-  const el = document.getElementById('toast');
-  const ic = document.getElementById('toast-icon');
-  document.getElementById('toast-msg').textContent = msg;
-  el.className = `show ${type}`;
-  ic.innerHTML = type === 'success'
-    ? '<polyline points="20 6 9 17 4 12"/>'
-    : '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+function toast(msg, type='success') {
+  const el=document.getElementById('toast');
+  const ic=document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent=msg;
+  el.className=`show ${type}`;
+  ic.innerHTML=type==='success'?'<polyline points="20 6 9 17 4 12"/>':'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.className = ''; }, 3200);
+  toastTimer=setTimeout(()=>{el.className='';},3400);
 }
 
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ─── BOOT ────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
