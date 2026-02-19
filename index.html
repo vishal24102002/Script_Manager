@@ -359,6 +359,9 @@ body{font-family:'Syne',sans-serif;background:var(--bg-deep);color:var(--text-hi
   <button class="icon-btn" title="Toggle theme" onclick="toggleTheme()">
     <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
   </button>
+  <button class="icon-btn" title="Reload Scripts" onclick="reloadScripts()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+  </button>
   <button class="icon-btn" title="Settings" onclick="openSettings()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
   </button>
@@ -382,20 +385,20 @@ body{font-family:'Syne',sans-serif;background:var(--bg-deep);color:var(--text-hi
   <div id="scripts-list">
     <div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Loading…</span></div>
   </div>
-  <div class="panel-bottom">
-    <button class="bottom-btn" onclick="reloadScripts()">
+  <!-- <div class="panel-bottom"> -->
+    <!-- <button class="bottom-btn" onclick="reloadScripts()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       Reload Scripts
-    </button>
-    <button class="bottom-btn" onclick="openSettings()">
+    </button> -->
+    <!-- <button class="bottom-btn" onclick="openSettings()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg>
       Settings
-    </button>
-    <button class="bottom-btn" onclick="openProfile()">
+    </button> -->
+    <!-- <button class="bottom-btn" onclick="openProfile()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span id="profile-btn-name">Profile</span>
-    </button>
-  </div>
+    </button> -->
+  <!-- </div> -->
 </div>
 
 <!-- ══ MAIN ══ -->
@@ -1322,9 +1325,9 @@ async function updateMeta(script) {
   document.getElementById('meta-name').textContent=script.name;
   document.getElementById('meta-created').textContent=script.createdOn||'Unknown';
   const badges=[];
-  if (script.hasScript) badges.push('<span class="badge py">🐍 Python</span>');
-  if (script.hasReadme) badges.push('<span class="badge md">📖 README</span>');
-  if (script.inputConfig?.length) badges.push('<span class="badge cfg">⚙️ Config</span>');
+  if (script.hasScript) badges.push('<span class="badge py">Python</span>');
+  if (script.hasReadme) badges.push('<span class="badge md">README</span>');
+  if (script.inputConfig?.length) badges.push('<span class="badge cfg">Config</span>');
   document.getElementById('script-badges').innerHTML=badges.join('');
   if (script.inputConfig?.length) {
     document.getElementById('cfg-card').style.display='block';

@@ -23,6 +23,7 @@
     "asarUnpack": [
       "scripts/**/*"
     ],
+    
     "linux": {
       "target": "AppImage",
       "category": "Development"
